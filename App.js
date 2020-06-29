@@ -3,6 +3,7 @@ import { Button } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { navigationRef } from "./src/navigationRef";
 import {
   Provider as AuthProvider,
@@ -71,8 +72,10 @@ const App = () => {
 
 export default () => {
   return (
-    <AuthProvider>
-      <App />
-    </AuthProvider>
+    <SafeAreaProvider>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </SafeAreaProvider>
   );
 };

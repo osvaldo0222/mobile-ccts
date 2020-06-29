@@ -35,11 +35,7 @@ const SignInScreen = () => {
             containerStyle={styles.footerButton}
             titleStyle={{ fontSize: 14 }}
             title="¿No tienes una cuenta? Regístrate"
-            onPress={() => {
-              setLoading(true);
-              signInCallback({ username, password });
-            }}
-            S
+            onPress={() => {}}
             type="clear"
           />
         </View>
