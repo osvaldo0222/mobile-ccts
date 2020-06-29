@@ -1,21 +1,78 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useContext } from "react";
+import { Button } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { navigationRef } from "./src/navigationRef";
+import {
+  Provider as AuthProvider,
+  Context as AuthContext,
+} from "./src/context/AuthContext";
+import SignInScreen from "./src/screens/SignInScreen";
+import SignUpScreen from "./src/screens/SignUpScreen";
+import SplashScreen from "./src/screens/SplashScreen";
 
-export default function App() {
+const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
+
+/** TEMP CODE */
+const Home = () => {
+  const { signout } = useContext(AuthContext);
+  return <Button title="Logout" onPress={signout} />;
+};
+
+const LoginFlow = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Stack.Navigator>
+      <Stack.Screen name="SignIn" component={SignInScreen} />
+      <Stack.Screen name="SignUp" component={SignUpScreen} />
+    </Stack.Navigator>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const AppNav = () => {
+  return (
+    <Drawer.Navigator initialRouteName="Home">
+      <Drawer.Screen name="Home" component={Home} />
+    </Drawer.Navigator>
+  );
+};
+
+const App = () => {
+  const {
+    state: { token, isLoading },
+  } = useContext(AuthContext);
+
+  return (
+    <NavigationContainer ref={navigationRef}>
+      <Stack.Navigator>
+        {isLoading ? (
+          <Stack.Screen
+            name="Splash"
+            component={SplashScreen}
+            options={{ header: () => null }}
+          />
+        ) : null}
+        {token ? (
+          <Stack.Screen name="AppFlow" component={AppNav} />
+        ) : (
+          <>
+            <Stack.Screen
+              name="LoginFlow"
+              component={LoginFlow}
+              options={{ header: () => null }}
+            />
+          </>
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
+
+export default () => {
+  return (
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  );
+};
