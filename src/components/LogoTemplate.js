@@ -1,7 +1,7 @@
 import React from "react";
 import { Dimensions, Image } from "react-native";
 
-const logoSize = Dimensions.get("screen").height * 0.2;
+const logoSize = Dimensions.get("screen").height * 0.15;
 
 const LogoTemplate = ({ width, height }) => {
   return (

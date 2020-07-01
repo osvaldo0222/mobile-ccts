@@ -1,5 +1,5 @@
-import React, { useContext } from "react";
-import { Button } from "react-native";
+import React, { useContext, useEffect } from "react";
+import { Button, Platform } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
@@ -12,6 +12,8 @@ import {
 import SignInScreen from "./src/screens/SignInScreen";
 import SignUpScreen from "./src/screens/SignUpScreen";
 import SplashScreen from "./src/screens/SplashScreen";
+import { Notifications } from "expo";
+import * as Permissions from "expo-permissions";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -19,6 +21,33 @@ const Drawer = createDrawerNavigator();
 /** TEMP CODE */
 const Home = () => {
   const { signout } = useContext(AuthContext);
+
+  const temp = async () => {
+    const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+    if (status !== "granted") {
+      alert("No notification permissions!");
+      return;
+    }
+
+    // Get the token that identifies this device
+    let token = await Notifications.getExpoPushTokenAsync();
+
+    if (Platform.OS === "android") {
+      Notifications.createChannelAndroidAsync("default", {
+        name: "default",
+        sound: true,
+        priority: "max",
+        vibrate: [0, 250, 250, 250],
+      });
+    }
+
+    console.log(token);
+  };
+
+  useEffect(() => {
+    temp();
+  }, []);
+
   return <Button title="Logout" onPress={signout} />;
 };
 

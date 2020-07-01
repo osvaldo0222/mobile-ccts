@@ -1,58 +1,55 @@
-import React, { useContext } from "react";
-import { StyleSheet, View, ScrollView } from "react-native";
+import React, { useContext, useEffect } from "react";
+import { StyleSheet, View } from "react-native";
 import { Button, Divider } from "react-native-elements";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Context as AuthContext } from "../context/AuthContext";
 import AuthForm from "../components/AuthForm";
 import LogoTemplate from "../components/LogoTemplate";
+import ScrollSafeArea from "../components/ScrollSafeArea";
 
-const SignInScreen = () => {
+const SignInScreen = ({ navigation }) => {
   const {
-    state: { errorMessage },
+    state: {
+      errorMessages: { login },
+    },
     signin,
-    clearErrorMessage,
+    clearErrorMessages,
   } = useContext(AuthContext);
 
+  useEffect(() => {
+    const blurNavListener = navigation.addListener("focus", () =>
+      clearErrorMessages()
+    );
+
+    return blurNavListener;
+  }, [navigation]);
+
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.scrollContainer}
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.header}>
-          <LogoTemplate />
-        </View>
-        <View style={styles.body}>
-          <AuthForm
-            signInCallback={signin}
-            errorMessage={errorMessage}
-            clearErrorMessage={clearErrorMessage}
-          />
-        </View>
-        <View style={styles.footer}>
-          <Divider />
-          <Button
-            containerStyle={styles.footerButton}
-            titleStyle={{ fontSize: 14 }}
-            title="¿No tienes una cuenta? Regístrate"
-            onPress={() => {}}
-            type="clear"
-          />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <ScrollSafeArea>
+      <View style={styles.header}>
+        <LogoTemplate />
+      </View>
+      <View style={styles.body}>
+        <AuthForm
+          signInCallback={signin}
+          errorMessage={login}
+          clearErrorMessage={clearErrorMessages}
+        />
+      </View>
+      <View style={styles.footer}>
+        <Divider />
+        <Button
+          containerStyle={styles.footerButton}
+          titleStyle={{ fontSize: 14 }}
+          title="¿No tienes una cuenta? Regístrate"
+          onPress={() => navigation.navigate("SignUp")}
+          type="clear"
+        />
+      </View>
+    </ScrollSafeArea>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 15,
-    backgroundColor: "white",
-  },
-  scrollContainer: {
-    flexGrow: 1,
-  },
   header: {
     flex: 2,
     justifyContent: "center",

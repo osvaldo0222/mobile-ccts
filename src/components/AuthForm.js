@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { Input, Button } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import PasswordInput from "./PasswordInput";
 
 const AuthForm = ({ signInCallback, clearErrorMessage, errorMessage }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [secure, setSecure] = useState(true);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -20,7 +20,7 @@ const AuthForm = ({ signInCallback, clearErrorMessage, errorMessage }) => {
             onPress: () => setPassword(""),
           },
         ],
-        { cancelable: true }
+        { cancelable: false }
       );
       setLoading(false);
       clearErrorMessage();
@@ -32,26 +32,15 @@ const AuthForm = ({ signInCallback, clearErrorMessage, errorMessage }) => {
       <Input
         value={username}
         onChangeText={setUsername}
-        label="Usuario"
-        placeholder="Usuario o correo electrónico"
+        label="Usuario o correo electrónico"
         autoCapitalize="none"
         autoCorrect={false}
-        leftIcon={<Icon name="account" size={24} color="grey" />}
+        leftIcon={<Icon name="account" size={24} color="#ADADAD" />}
       />
-      <Input
-        value={password}
-        onChangeText={setPassword}
+      <PasswordInput
+        password={password}
+        setPassword={setPassword}
         label="Contraseña"
-        placeholder="Contraseña"
-        secureTextEntry={secure}
-        autoCapitalize="none"
-        autoCorrect={false}
-        leftIcon={<Icon name="lock" size={24} color="grey" />}
-        rightIcon={
-          <TouchableOpacity onPress={() => setSecure((current) => !current)}>
-            <Icon name={secure ? "eye-off" : "eye"} size={24} color="grey" />
-          </TouchableOpacity>
-        }
       />
       <Button
         title="  Iniciar Sesión"
@@ -59,7 +48,7 @@ const AuthForm = ({ signInCallback, clearErrorMessage, errorMessage }) => {
           <Icon
             name="account-arrow-right"
             size={24}
-            color={username.length && password.length ? "#1E91D6" : "grey"}
+            color={username.length && password.length ? "#1E91D6" : "#ADADAD"}
           />
         }
         onPress={() => {

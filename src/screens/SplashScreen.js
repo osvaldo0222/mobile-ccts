@@ -8,13 +8,13 @@ const SplashScreen = () => {
   const { tryLocalSignin } = useContext(AuthContext);
 
   useEffect(() => {
-    setTimeout(tryLocalSignin, 2000);
+    setTimeout(tryLocalSignin, 1000);
   }, []);
 
   return (
     <View style={styles.container}>
       <LogoTemplate />
-      <ActivityIndicator size="large" color="#0000ff" />
+      <ActivityIndicator size="large" color="#0000FF" />
       <Text h3 style={styles.text}>
         CCTS
       </Text>
