@@ -1,19 +1,14 @@
 import React, { useContext, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
-import { Button, Divider } from "react-native-elements";
+import { Button } from "react-native-elements";
 import { Context as AuthContext } from "../context/AuthContext";
+import { primaryColor, borderLineColor } from "../utils/Colors";
 import AuthForm from "../components/AuthForm";
 import LogoTemplate from "../components/LogoTemplate";
 import ScrollSafeArea from "../components/ScrollSafeArea";
 
 const SignInScreen = ({ navigation }) => {
-  const {
-    state: {
-      errorMessages: { login },
-    },
-    signin,
-    clearErrorMessages,
-  } = useContext(AuthContext);
+  const { clearErrorMessages } = useContext(AuthContext);
 
   useEffect(() => {
     const blurNavListener = navigation.addListener("focus", () =>
@@ -29,17 +24,18 @@ const SignInScreen = ({ navigation }) => {
         <LogoTemplate />
       </View>
       <View style={styles.body}>
-        <AuthForm
-          signInCallback={signin}
-          errorMessage={login}
-          clearErrorMessage={clearErrorMessages}
+        <AuthForm />
+        <Button
+          containerStyle={styles.forgetPassword}
+          titleStyle={styles.button}
+          title="¿Olvidaste tus credenciales? Restablecer"
+          type="clear"
         />
       </View>
       <View style={styles.footer}>
-        <Divider />
         <Button
           containerStyle={styles.footerButton}
-          titleStyle={{ fontSize: 14 }}
+          titleStyle={styles.button}
           title="¿No tienes una cuenta? Regístrate"
           onPress={() => navigation.navigate("SignUp")}
           type="clear"
@@ -59,10 +55,19 @@ const styles = StyleSheet.create({
     flex: 3,
   },
   footer: {
+    borderTopColor: borderLineColor,
+    borderTopWidth: 1,
     flex: 0.05,
   },
   footerButton: {
     marginTop: 2,
+  },
+  forgetPassword: {
+    marginTop: 10,
+  },
+  button: {
+    fontSize: 14,
+    color: primaryColor,
   },
 });
 

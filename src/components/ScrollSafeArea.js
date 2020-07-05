@@ -1,6 +1,7 @@
 import React from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { secondaryColor } from "../utils/Colors";
 
 const ScrollSafeArea = ({ children }) => {
   return (
@@ -19,7 +20,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 15,
-    backgroundColor: "white",
+    backgroundColor: secondaryColor,
   },
   scrollContainer: {
     flexGrow: 1,

@@ -41,8 +41,14 @@ const authReducer = (state, action) => {
         ...state,
         errorMessages: { ...state.errorMessages, username: "" },
       };
+    case "add_notification_token":
+      return {
+        ...state,
+        notificationToken: action.payload,
+      };
     case "signin":
       return {
+        ...state,
         errorMessages: {
           username: "",
           email: "",
@@ -64,14 +70,15 @@ const authReducer = (state, action) => {
       };
     case "signout":
       return {
+        ...state,
         token: null,
+        notificationToken: null,
         errorMessages: {
           username: "",
           email: "",
           id: "",
           login: "",
         },
-        isLoading: false,
       };
     case "loaded":
       return { ...state, isLoading: false };
@@ -80,15 +87,92 @@ const authReducer = (state, action) => {
   }
 };
 
-const login = async ({ username, password }) => {
+const confirmId = (dispatch) => async ({ id }) => {
+  id = id.replace("-", "").replace("-", "");
+
   try {
-    let notToken = await Notifications.getExpoPushTokenAsync();
+    if (id.match(/^[0-9]+$/) && id.length == 11) {
+      await cctsApi.post(`/public/checkPersonalIdentifier/${id}`);
+      dispatch({ type: "confirm_id" });
+    } else {
+      dispatch({
+        type: "add_id_error",
+        payload: "Su cédula debe ser valida.",
+      });
+    }
+  } catch (error) {
+    dispatch({
+      type: "add_id_error",
+      payload: error.statusText,
+    });
+  }
+};
+
+const confirmUsername = (dispatch) => async ({ username }) => {
+  try {
+    if (username.match(/^[a-zA-Z0-9]*$/) && username.length > 0) {
+      await cctsApi.post(`/public/checkUsername/${username}`);
+      dispatch({ type: "confirm_username" });
+    } else {
+      dispatch({
+        type: "add_username_error",
+        payload: "Nombre de usuario invalido",
+      });
+    }
+  } catch (error) {
+    dispatch({
+      type: "add_username_error",
+      payload: error.statusText,
+    });
+  }
+};
+
+/** TODO: search for a email validation API */
+const confirmEmail = (dispatch) => async ({ email }) => {
+  try {
+    if (email.length > 0) {
+      await cctsApi.post(`/public/checkEmail/${email}`);
+      dispatch({ type: "confirm_email" });
+    } else {
+      dispatch({
+        type: "add_email_error",
+        payload: "Correo invalido",
+      });
+    }
+  } catch (error) {
+    dispatch({
+      type: "add_email_error",
+      payload: error.statusText,
+    });
+  }
+};
+
+const clearErrorMessages = (dispatch) => () => {
+  dispatch({ type: "clear_error_message" });
+};
+
+const setNotificationToken = (dispatch) => ({ notificationToken }) => {
+  dispatch({ type: "add_notification_token", payload: notificationToken });
+};
+
+const tryLocalSignin = (dispatch) => async () => {
+  const token = await AsyncStorage.getItem("token");
+  dispatch({ type: "loaded" });
+  if (token) {
+    dispatch({ type: "signin", payload: token });
+  } else {
+    navigate("LoginFlow");
+  }
+};
+
+const login = async ({ username, password, notificationToken }) => {
+  try {
     const response = await cctsApi.post(
       "/login",
       { username, password },
       {
         headers: {
-          NotificationToken: notToken,
+          NotificationToken: notificationToken ? notificationToken : "",
         },
       }
     );
@@ -100,67 +184,23 @@ const login = async ({ username, password }) => {
   }
 };
 
-const confirmId = (dispatch) => async ({ id }) => {
-  try {
-    await cctsApi.post(
-      `/public/checkPersonalIdentifier/${id.replace("-", "").replace("-", "")}`
-    );
-    dispatch({ type: "confirm_id" });
-  } catch (error) {
-    dispatch({
-      type: "add_id_error",
-      payload: error.statusText,
-    });
-  }
-};
+const signup = (dispatch) => async ({
+  id,
+  email,
+  username,
+  password,
+  notificationToken,
+}) => {
+  id = id.replace("-", "").replace("-", "");
 
-const confirmUsername = (dispatch) => async ({ username }) => {
-  try {
-    await cctsApi.post(`/public/checkUsername/${username}`);
-    dispatch({ type: "confirm_username" });
-  } catch (error) {
-    dispatch({
-      type: "add_username_error",
-      payload: error.statusText,
-    });
-  }
-};
-
-const confirmEmail = (dispatch) => async ({ email }) => {
-  try {
-    await cctsApi.post(`/public/checkEmail/${email}`);
-    dispatch({ type: "confirm_email" });
-  } catch (error) {
-    dispatch({
-      type: "add_email_error",
-      payload: error.statusText,
-    });
-  }
-};
-
-const tryLocalSignin = (dispatch) => async () => {
-  const token = await AsyncStorage.getItem("token");
-  dispatch({ type: "loaded", payload: token });
-  if (token) {
-    dispatch({ type: "signin", payload: token });
-  } else {
-    navigate("LoginFlow");
-  }
-};
-
-const clearErrorMessages = (dispatch) => () => {
-  dispatch({ type: "clear_error_message" });
-};
-
-const signup = (dispatch) => async ({ id, email, username, password }) => {
   try {
     await cctsApi.post("/public/signup", {
-      personalIdentifier: id.replace("-", "").replace("-", ""),
+      personalIdentifier: id,
       email,
       username,
       password,
     });
-    const token = await login({ username, password });
+    const token = await login({ username, password, notificationToken });
     dispatch({ type: "signin", payload: token });
   } catch (error) {
     dispatch({
@@ -170,9 +210,13 @@ const signup = (dispatch) => async ({ id, email, username, password }) => {
   }
 };
 
-const signin = (dispatch) => async ({ username, password }) => {
+const signin = (dispatch) => async ({
+  username,
+  password,
+  notificationToken,
+}) => {
   try {
-    const token = await login({ username, password });
+    const token = await login({ username, password, notificationToken });
     dispatch({ type: "signin", payload: token });
   } catch (error) {
     dispatch({
@@ -182,9 +226,21 @@ const signin = (dispatch) => async ({ username, password }) => {
   }
 };
 
-const signout = (dispatch) => async () => {
-  await AsyncStorage.removeItem("token");
-  dispatch({ type: "signout" });
+const signout = (dispatch) => async ({ notificationToken }) => {
+  try {
+    if (notificationToken) {
+      await cctsApi.put("/api/user/signout", null, {
+        headers: {
+          NotificationToken: notificationToken,
+        },
+      });
+    }
+  } catch (error) {
+    console.log("Notification can't detached!");
+  } finally {
+    await AsyncStorage.removeItem("token");
+    dispatch({ type: "signout" });
+  }
 };
 
 export const { Provider, Context } = createDataContext(
@@ -198,15 +254,17 @@ export const { Provider, Context } = createDataContext(
     confirmEmail,
     confirmId,
     confirmUsername,
+    setNotificationToken,
   },
   {
     token: null,
+    notificationToken: null,
+    isLoading: true,
     errorMessages: {
       username: "",
       email: "",
       id: "",
       login: "",
     },
-    isLoading: true,
   }
 );

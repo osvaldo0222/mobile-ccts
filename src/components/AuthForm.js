@@ -1,19 +1,29 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, TouchableOpacity, Alert } from "react-native";
+import React, { useState, useEffect, useContext } from "react";
+import { StyleSheet, Alert } from "react-native";
 import { Input, Button } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import PasswordInput from "./PasswordInput";
+import { Context as AuthContext } from "../context/AuthContext";
+import { captionColor, primaryColor } from "../utils/Colors";
 
-const AuthForm = ({ signInCallback, clearErrorMessage, errorMessage }) => {
+const AuthForm = () => {
+  const {
+    state: {
+      errorMessages: { login },
+      notificationToken,
+    },
+    signin,
+    clearErrorMessages,
+  } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (errorMessage) {
+    if (login) {
       Alert.alert(
         "Error",
-        errorMessage,
+        login,
         [
           {
             text: "Intentar de nuevo",
@@ -23,9 +33,9 @@ const AuthForm = ({ signInCallback, clearErrorMessage, errorMessage }) => {
         { cancelable: false }
       );
       setLoading(false);
-      clearErrorMessage();
+      clearErrorMessages();
     }
-  }, [errorMessage]);
+  }, [login]);
 
   return (
     <>
@@ -35,44 +45,33 @@ const AuthForm = ({ signInCallback, clearErrorMessage, errorMessage }) => {
         label="Usuario o correo electrónico"
         autoCapitalize="none"
         autoCorrect={false}
-        leftIcon={<Icon name="account" size={24} color="#ADADAD" />}
+        leftIcon={<Icon name="account" size={24} color={captionColor} />}
       />
-      <PasswordInput
-        password={password}
-        setPassword={setPassword}
-        label="Contraseña"
-      />
+      <PasswordInput value={password} onChangeText={setPassword} />
       <Button
         title="  Iniciar Sesión"
         icon={
           <Icon
             name="account-arrow-right"
             size={24}
-            color={username.length && password.length ? "#1E91D6" : "#ADADAD"}
+            color={
+              username.length && password.length ? primaryColor : captionColor
+            }
           />
         }
         onPress={() => {
           setLoading(true);
-          signInCallback({ username, password });
+          signin({ username, password, notificationToken });
         }}
         type="outline"
         loading={loading}
         disabled={username.length && password.length ? false : true}
-      />
-      <Button
-        containerStyle={styles.forgetPassword}
-        titleStyle={{ fontSize: 14 }}
-        title="¿Olvidaste tus credenciales? Restablecer"
-        type="clear"
+        titleStyle={{ color: primaryColor }}
       />
     </>
   );
 };
 
-const styles = StyleSheet.create({
-  forgetPassword: {
-    marginTop: 10,
-  },
-});
+const styles = StyleSheet.create({});
 
 export default AuthForm;

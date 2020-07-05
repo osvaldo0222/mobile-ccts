@@ -1,55 +1,71 @@
 import React, { useContext, useEffect } from "react";
-import { Button, Platform } from "react-native";
+import { Platform, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import Constants from "expo-constants";
+import * as Notifications from "expo-notifications";
+import * as Permissions from "expo-permissions";
 import { navigationRef } from "./src/navigationRef";
+import { secondaryColor } from "./src/utils/Colors";
 import {
   Provider as AuthProvider,
   Context as AuthContext,
 } from "./src/context/AuthContext";
 import SignInScreen from "./src/screens/SignInScreen";
 import SignUpScreen from "./src/screens/SignUpScreen";
-import SplashScreen from "./src/screens/SplashScreen";
-import { Notifications } from "expo";
-import * as Permissions from "expo-permissions";
+import LocalSignInScreen from "./src/screens/LocalSignInScreen";
+import HomeScreen from "./src/screens/HomeScreen";
+import LogoutScreen from "./src/screens/LogoutScreen";
+import { DrawerContent } from "./src/screens/DrawerContent";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
+
+const registerForPushNotificationsAsync = async () => {
+  let token;
+  if (Constants.isDevice) {
+    const { status: existingStatus } = await Permissions.getAsync(
+      Permissions.NOTIFICATIONS
+    );
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+      finalStatus = status;
+    }
+    if (finalStatus !== "granted") {
+      alert("Failed to get push token for push notification!");
+      return;
+    }
+    let experienceId = undefined;
+    if (!Constants.manifest) {
+      experienceId = "@osvaldo0222/MobileCCTS";
+    }
+    token = (await Notifications.getExpoPushTokenAsync({ experienceId })).data;
+  } else {
+    alert("Must use physical device for Push Notifications");
+  }
+
+  if (Platform.OS === "android") {
+    Notifications.setNotificationChannelAsync("default", {
+      name: "default",
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: "#FF231F7C",
+    });
+  }
+
+  return token;
+};
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
-
-/** TEMP CODE */
-const Home = () => {
-  const { signout } = useContext(AuthContext);
-
-  const temp = async () => {
-    const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-    if (status !== "granted") {
-      alert("No notification permissions!");
-      return;
-    }
-
-    // Get the token that identifies this device
-    let token = await Notifications.getExpoPushTokenAsync();
-
-    if (Platform.OS === "android") {
-      Notifications.createChannelAndroidAsync("default", {
-        name: "default",
-        sound: true,
-        priority: "max",
-        vibrate: [0, 250, 250, 250],
-      });
-    }
-
-    console.log(token);
-  };
-
-  useEffect(() => {
-    temp();
-  }, []);
-
-  return <Button title="Logout" onPress={signout} />;
-};
 
 const LoginFlow = () => {
   return (
@@ -62,29 +78,46 @@ const LoginFlow = () => {
 
 const AppNav = () => {
   return (
-    <Drawer.Navigator initialRouteName="Home">
-      <Drawer.Screen name="Home" component={Home} />
+    <Drawer.Navigator
+      drawerContent={(props) => <DrawerContent {...props} />}
+      initialRouteName="Home"
+    >
+      <Drawer.Screen name="Home" component={HomeScreen} />
+      <Drawer.Screen name="Logout" component={LogoutScreen} />
     </Drawer.Navigator>
   );
 };
 
 const App = () => {
   const {
-    state: { token, isLoading },
+    state: { token, notificationToken, isLoading },
+    setNotificationToken,
   } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (!notificationToken) {
+      registerForPushNotificationsAsync().then((notificationToken) => {
+        setNotificationToken({ notificationToken });
+      });
+    }
+  }, [notificationToken]);
 
   return (
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator>
         {isLoading ? (
           <Stack.Screen
-            name="Splash"
-            component={SplashScreen}
+            name="LocalSignIn"
+            component={LocalSignInScreen}
             options={{ header: () => null }}
           />
         ) : null}
         {token ? (
-          <Stack.Screen name="AppFlow" component={AppNav} />
+          <Stack.Screen
+            name="AppFlow"
+            component={AppNav}
+            options={{ header: () => null }}
+          />
         ) : (
           <>
             <Stack.Screen
@@ -104,6 +137,13 @@ export default () => {
     <SafeAreaProvider>
       <AuthProvider>
         <App />
+        <StatusBar
+          hidden={false}
+          backgroundColor={secondaryColor}
+          barStyle="dark-content"
+          translucent={true}
+          animated={true}
+        />
       </AuthProvider>
     </SafeAreaProvider>
   );

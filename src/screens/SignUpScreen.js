@@ -1,17 +1,25 @@
-import React, { useContext, useState, useEffect, useCallback } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { StyleSheet, View, TouchableOpacity, ScrollView } from "react-native";
 import { Input, Button } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { NavigationContext } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Context as AuthContext } from "../context/AuthContext";
+import { primaryColor, secondaryColor, captionColor } from "../utils/Colors";
 import LogoTemplate from "../components/LogoTemplate";
 import PasswordInput from "../components/PasswordInput";
 
 const SignUpScreen = () => {
   const navigation = useContext(NavigationContext);
   const {
-    state: { errorMessages },
+    state: {
+      errorMessages: {
+        id: idError,
+        email: emailError,
+        username: usernameError,
+      },
+      notificationToken,
+    },
     signup,
     confirmEmail,
     confirmId,
@@ -29,12 +37,12 @@ const SignUpScreen = () => {
     email.length &&
     username.length &&
     password.length &&
-    !errorMessages.id &&
-    !errorMessages.email &&
-    !errorMessages.username;
+    !idError &&
+    !emailError &&
+    !usernameError;
 
   useEffect(() => {
-    if (errorMessages.id || errorMessages.username || errorMessages.email) {
+    if (idError || emailError || usernameError) {
       setLoading(false);
     }
 
@@ -43,7 +51,7 @@ const SignUpScreen = () => {
     );
 
     return blurNavListener;
-  }, [errorMessages, navigation]);
+  }, [idError, emailError, usernameError, navigation]);
 
   const handleIdChange = (text) => {
     if (
@@ -62,24 +70,14 @@ const SignUpScreen = () => {
     }
   };
 
-  const validate = () => {
-    if (id.length >= 13) {
-      confirmId({ id });
-    }
-
-    if (email.length > 0) {
-      confirmEmail({ email });
-    }
-
-    if (username.length > 0) {
-      confirmUsername({ username });
-    }
+  const handleUsernameChange = (text) => {
+    setUsername((current) => (text.match(/^[a-zA-Z0-9]*$/) ? text : current));
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity style={styles.back} onPress={() => navigation.pop()}>
-        <Icon name="arrow-left" size={30} color="#ADADAD" />
+        <Icon name="arrow-left" size={30} color={captionColor} />
       </TouchableOpacity>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
@@ -90,16 +88,18 @@ const SignUpScreen = () => {
             value={id}
             onChangeText={handleIdChange}
             label="Cédula de identidad"
-            leftIcon={<Icon name="card-bulleted" size={24} color="#ADADAD" />}
+            leftIcon={
+              <Icon name="card-bulleted" size={24} color={captionColor} />
+            }
             rightIcon={
-              errorMessages.id ? (
+              idError ? (
                 <Icon name="close-circle" size={24} color="red" />
               ) : null
             }
             keyboardType="numeric"
             maxLength={13}
-            errorMessage={errorMessages.id}
-            onBlur={() => validate()}
+            errorMessage={idError}
+            onBlur={() => confirmId({ id })}
           />
           <Input
             value={email}
@@ -107,36 +107,32 @@ const SignUpScreen = () => {
             label="Correo electrónico"
             autoCapitalize="none"
             autoCorrect={false}
-            leftIcon={<Icon name="email" size={24} color="#ADADAD" />}
+            leftIcon={<Icon name="email" size={24} color={captionColor} />}
             rightIcon={
-              errorMessages.email ? (
+              emailError ? (
                 <Icon name="close-circle" size={24} color="red" />
               ) : null
             }
             keyboardType="email-address"
-            errorMessage={errorMessages.email}
-            onBlur={() => validate()}
+            errorMessage={emailError}
+            onBlur={() => confirmEmail({ email })}
           />
           <Input
             value={username}
-            onChangeText={setUsername}
+            onChangeText={handleUsernameChange}
             label="Usuario"
             autoCapitalize="none"
             autoCorrect={false}
             leftIcon={<Icon name="account" size={24} color="#ADADAD" />}
             rightIcon={
-              errorMessages.username ? (
+              usernameError ? (
                 <Icon name="close-circle" size={24} color="red" />
               ) : null
             }
-            errorMessage={errorMessages.username}
-            onBlur={() => validate()}
+            errorMessage={usernameError}
+            onBlur={() => confirmUsername({ username })}
           />
-          <PasswordInput
-            label="Contraseña"
-            password={password}
-            setPassword={setPassword}
-          />
+          <PasswordInput value={password} onChangeText={setPassword} />
         </View>
       </ScrollView>
       <Button
@@ -146,16 +142,17 @@ const SignUpScreen = () => {
           <Icon
             name="account-plus"
             size={24}
-            color={validation ? "#1E91D6" : "#ADADAD"}
+            color={validation ? primaryColor : captionColor}
           />
         }
         containerStyle={styles.button}
-        disabled={validation ? false : true}
+        disabled={!validation}
         loading={loading}
         onPress={() => {
           setLoading(true);
-          signup({ id, email, username, password });
+          signup({ id, email, username, password, notificationToken });
         }}
+        titleStyle={{ color: primaryColor }}
       />
     </SafeAreaView>
   );
@@ -165,7 +162,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 15,
-    backgroundColor: "white",
+    backgroundColor: secondaryColor,
   },
   header: {
     flex: 0.5,
