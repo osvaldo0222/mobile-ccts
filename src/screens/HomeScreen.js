@@ -1,14 +1,13 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
-import AppHeader from "../components/AppHeader";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import AppHeader from '../components/AppHeader';
 
 const Home = () => {
-  return (
-    <>
-      <AppHeader title="Inicio" />
-    </>
-  );
+	return (
+		<>
+			<AppHeader title="Inicio" />
+		</>
+	);
 };
 
 const styles = StyleSheet.create({});
