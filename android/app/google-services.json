@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "379951464984",
+    "firebase_url": "https://ccts-192a0.firebaseio.com",
+    "project_id": "ccts-192a0",
+    "storage_bucket": "ccts-192a0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:379951464984:android:5f35ae423600500b6cf96d",
+        "android_client_info": {
+          "package_name": "com.ccts.client"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "379951464984-e951kbm7s7qtvl5k232gkm02hc6od7d2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2V90KryRi3sT416VCT-HfJCIhLN6i8Vg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "379951464984-e951kbm7s7qtvl5k232gkm02hc6od7d2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
