@@ -6476,6 +6476,16 @@ react-is@^16.12.0, react-is@^16.13.0, react-is@^16.7.0, react-is@^16.8.1, react-
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
+react-native-background-actions@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/react-native-background-actions/-/react-native-background-actions-2.2.0.tgz#33d72e5f13c52a2f2925583a1c7bf34d751c02dc"
+  integrity sha512-08YNc7ugPimyWhr7rZw0+qbyhVYuZtLSGI0Da7M7PESrp0V5uatxIkpzwQzy7aW/nwL9XYW4227X0V7XY7paow==
+
+react-native-ble-advertiser@^0.0.16:
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/react-native-ble-advertiser/-/react-native-ble-advertiser-0.0.16.tgz#095edb2c5e7765248c58690ab1fabf9ef089e2da"
+  integrity sha512-P8EL74A9KjybuYQ4OsHIOehn3NaNMVVaKE+/JAZbJkBqWvaZpPFx5wZf/LWcNxKXuhJNgNOMjEffA1Y7d95wSg==
+
 react-native-chart-kit@^6.2.3:
   version "6.2.3"
   resolved "https://registry.yarnpkg.com/react-native-chart-kit/-/react-native-chart-kit-6.2.3.tgz#3ba7a36f9c40c5c72d645b32ffcda368c6aa85e7"

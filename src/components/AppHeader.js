@@ -3,6 +3,7 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import { Header } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { NavigationContext } from "@react-navigation/native";
+import useBle from "../hooks/useBle";
 import { secondaryColor, primaryColor } from "../utils/Colors";
 
 const Menu = () => {
@@ -16,30 +17,39 @@ const Menu = () => {
 };
 
 const AppHeader = ({ title }) => {
+  const [broadcastState, tryToBroadcast, stopBroadcast] = useBle();
+
   return (
-    <>
-      <Header
-        leftComponent={<Menu />}
-        centerComponent={{
-          text: title,
-          style: { color: secondaryColor, fontSize: 18 },
-        }}
-        rightComponent={
-          <Icon name="bluetooth-off" size={30} color={secondaryColor} />
-        }
-        backgroundColor={primaryColor}
-        statusBarProps={{
-          hidden: false,
-          barStyle: "light-content",
-          backgroundColor: primaryColor,
-          translucent: true,
-          animated: true,
-        }}
-        containerStyle={{
-          flex: 0.1,
-        }}
-      />
-    </>
+    <Header
+      leftComponent={<Menu />}
+      centerComponent={{
+        text: title,
+        style: { color: secondaryColor, fontSize: 18 },
+      }}
+      rightComponent={
+        <TouchableOpacity
+          onPress={broadcastState ? stopBroadcast : tryToBroadcast}
+        >
+          <Icon
+            name={
+              broadcastState
+                ? "access-point-network"
+                : "access-point-network-off"
+            }
+            size={30}
+            color={secondaryColor}
+          />
+        </TouchableOpacity>
+      }
+      backgroundColor={primaryColor}
+      statusBarProps={{
+        hidden: false,
+        barStyle: "light-content",
+        backgroundColor: primaryColor,
+        translucent: true,
+        animated: true,
+      }}
+    />
   );
 };
 
