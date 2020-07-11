@@ -31,6 +31,7 @@
     "react-native-screens": "~2.9.0",
     "react-native-svg": "^12.1.0",
     "react-native-svg-charts": "^5.4.0",
+    "react-native-swift": "^1.2.3",
     "react-native-unimodules": "~0.10.1",
     "react-native-vector-icons": "^7.0.0",
     "react-native-web": "~0.11.7"
