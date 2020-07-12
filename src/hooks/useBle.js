@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { Platform, PermissionsAndroid, Alert } from "react-native";
 import BLEAdvertiser from "react-native-ble-advertiser";
 import BackgroundJob from "react-native-background-actions";
@@ -10,7 +10,7 @@ const sleep = (time) =>
   new Promise((resolve) => setTimeout(() => resolve(), time));
 
 const options = {
-  taskName: "CCTS-Bacground",
+  taskName: "ccts",
   taskTitle: "CCTS",
   taskDesc: "Aplicación CCTS está transmitiendo...",
   taskIcon: {
@@ -33,7 +33,7 @@ export default () => {
     setStarted,
   } = useContext(BleContext);
 
-  const getAdapterState = async () => {
+  const getAdapter = async () => {
     const adapterState = await BLEAdvertiser.getAdapterState()
       .then((result) => {
         return result === "STATE_ON";
@@ -46,18 +46,19 @@ export default () => {
   };
 
   const tryToBroadcast = async () => {
-    const blueoothActive = await getAdapterState();
+    const blueoothActive = await getAdapter();
 
     if (!blueoothActive) {
       await Alert.alert(
         "CCTS requiere de bluetooth",
-        "Deseas habilitar bluetooth?",
+        "Deseas permitir a CCTS utilizar bluetooth?",
         [
           {
             text: "Yes",
             onPress: () => {
               BLEAdvertiser.enableAdapter();
-              sleep(1000).then(() =>
+              BLEAdvertiser.setCompanyId(0x4c);
+              sleep(2000).then(() =>
                 BackgroundJob.start(startBroadcast, options)
               );
             },
@@ -71,19 +72,21 @@ export default () => {
         { cancelable: false }
       );
     } else {
-      BackgroundJob.start(startBroadcast, options);
+      BLEAdvertiser.setCompanyId(0x4c);
+      sleep(2000).then(() =>
+        BackgroundJob.start(startBroadcast, options)
+      );
     }
   };
 
   const startBroadcast = async () => {
     await new Promise(() => {
-      BLEAdvertiser.setCompanyId(0x4c);
       BLEAdvertiser.broadcast(uuid, [1, 0], {
-        advertiseMode: BLEAdvertiser.ADVERTISE_MODE_BALANCED,
-        txPowerLevel: BLEAdvertiser.ADVERTISE_TX_POWER_MEDIUM,
+        advertiseMode: BLEAdvertiser.ADVERTISE_MODE_LOW_,
+        txPowerLevel: BLEAdvertiser.ADVERTISE_TX_POWER_HIGH,
         connectable: false,
         includeDeviceName: false,
-        includeTxPowerLevel: true,
+        includeTxPowerLevel: false,
       })
         .then((sucess) => {
           console.log(uuid, "Adv Successful", sucess);
