@@ -28,9 +28,10 @@ export default () => {
     state: { uuid },
   } = useContext(AuthContext);
   const {
-    state: { broadcastState, started },
+    state: { broadcastState, started, userResponse },
     setBroadcastState,
     setStarted,
+    setUserResponse,
   } = useContext(BleContext);
 
   const getAdapter = async () => {
@@ -61,11 +62,14 @@ export default () => {
               sleep(2000).then(() =>
                 BackgroundJob.start(startBroadcast, options)
               );
+              setUserResponse({ response: true });
             },
           },
           {
             text: "No",
-            onPress: () => {},
+            onPress: () => {
+              setUserResponse({ response: false });
+            },
             style: "cancel",
           },
         ],
@@ -73,9 +77,7 @@ export default () => {
       );
     } else {
       BLEAdvertiser.setCompanyId(0x4c);
-      sleep(2000).then(() =>
-        BackgroundJob.start(startBroadcast, options)
-      );
+      sleep(2000).then(() => BackgroundJob.start(startBroadcast, options));
     }
   };
 
@@ -133,7 +135,7 @@ export default () => {
   };
 
   useEffect(() => {
-    if (!started) {
+    if (!started && userResponse) {
       stopBroadcast();
 
       if (uuid) {

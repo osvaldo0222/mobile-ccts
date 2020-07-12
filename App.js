@@ -3,12 +3,14 @@ import { Platform, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Constants from "expo-constants";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
 import { navigationRef } from "./src/navigationRef";
-import { secondaryColor } from "./src/utils/Colors";
+import { secondaryColor, primaryColor, captionColor } from "./src/utils/Colors";
 import {
   Provider as AuthProvider,
   Context as AuthContext,
@@ -20,7 +22,6 @@ import LocalSignInScreen from "./src/screens/LocalSignInScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import LogoutScreen from "./src/screens/LogoutScreen";
 import { DrawerContent } from "./src/screens/DrawerContent";
-import StatisticsComponent from "./src/screens/Statistics";
 import InfectedChart from "./src/components/charts/InfectedChart";
 import InfectedBySexGroupChart from "./src/components/charts/InfectedBySexGroupChart";
 
@@ -69,6 +70,7 @@ const registerForPushNotificationsAsync = async () => {
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
 
 const LoginFlow = () => {
   return (
@@ -79,6 +81,37 @@ const LoginFlow = () => {
   );
 };
 
+const StatisticsNavigator = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+          if (route.name === "Infectados") {
+            iconName = "ambulance";
+          } else if (route.name === "Recuperados") {
+            iconName = "exit-run";
+          } else if (route.name === "Defunciones") {
+            iconName = "emoticon-sad";
+          } else if (route.name === "Por Sexo") {
+            iconName = "gender-transgender";
+          }
+          return <Icon name={iconName} size={size} color={color} />;
+        },
+      })}
+      tabBarOptions={{
+        activeTintColor: primaryColor,
+        inactiveTintColor: captionColor,
+      }}
+    >
+      <Tab.Screen name="Infectados" component={InfectedChart} />
+      <Tab.Screen name="Recuperados" component={InfectedChart} />
+      <Tab.Screen name="Defunciones" component={InfectedChart} />
+      <Tab.Screen name="Por Sexo" component={InfectedBySexGroupChart} />
+    </Tab.Navigator>
+  );
+};
+
 const AppNav = () => {
   return (
     <Drawer.Navigator
@@ -86,15 +119,7 @@ const AppNav = () => {
       initialRouteName="Home"
     >
       <Drawer.Screen name="Home" component={HomeScreen} />
-      <Drawer.Screen name="Statistics" component={StatisticsComponent} />
-      <Drawer.Screen name="Infectados" component={InfectedChart} />
-      <Drawer.Screen name="Recuperados" component={InfectedChart} />
-      <Drawer.Screen name="Defunciones" component={InfectedChart} />
-      <Drawer.Screen
-        name="Infectados según género"
-        component={InfectedBySexGroupChart}
-      />
-
+      <Drawer.Screen name="Statistics" component={StatisticsNavigator} />
       <Drawer.Screen name="Logout" component={LogoutScreen} />
     </Drawer.Navigator>
   );
