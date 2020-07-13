@@ -27,12 +27,12 @@ const setUserResponse = (dispatch) => ({ response }) => {
   dispatch({ type: "set_response", payload: response });
 };
 
-const clearContext = (dispatch) => () => {
+const clearBleContext = (dispatch) => () => {
   dispatch({ type: "clear" });
 };
 
 export const { Provider, Context } = createDataContext(
   bleReducer,
-  { setBroadcastState, setStarted, setUserResponse, clearContext },
+  { setBroadcastState, setStarted, setUserResponse, clearBleContext },
   { broadcastState: false, started: false, userResponse: true }
 );

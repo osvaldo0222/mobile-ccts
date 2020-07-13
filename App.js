@@ -16,6 +16,7 @@ import {
   Context as AuthContext,
 } from "./src/context/AuthContext";
 import { Provider as BleProvider } from "./src/context/BleContext";
+import { Provider as NotificationProvider } from "./src/context/NotificationContext";
 import SignInScreen from "./src/screens/SignInScreen";
 import SignUpScreen from "./src/screens/SignUpScreen";
 import LocalSignInScreen from "./src/screens/LocalSignInScreen";
@@ -24,6 +25,7 @@ import LogoutScreen from "./src/screens/LogoutScreen";
 import { DrawerContent } from "./src/screens/DrawerContent";
 import InfectedChart from "./src/components/charts/InfectedChart";
 import InfectedBySexGroupChart from "./src/components/charts/InfectedBySexGroupChart";
+import NotificationScreen from "./src/screens/NotificationScreen";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -120,6 +122,7 @@ const AppNav = () => {
     >
       <Drawer.Screen name="Home" component={HomeScreen} />
       <Drawer.Screen name="Statistics" component={StatisticsNavigator} />
+      <Drawer.Screen name="Notifications" component={NotificationScreen} />
       <Drawer.Screen name="Logout" component={LogoutScreen} />
     </Drawer.Navigator>
   );
@@ -172,18 +175,20 @@ const App = () => {
 export default () => {
   return (
     <SafeAreaProvider>
-      <BleProvider>
-        <AuthProvider>
-          <App />
-          <StatusBar
-            hidden={false}
-            backgroundColor={secondaryColor}
-            barStyle="dark-content"
-            translucent={true}
-            animated={true}
-          />
-        </AuthProvider>
-      </BleProvider>
+      <NotificationProvider>
+        <BleProvider>
+          <AuthProvider>
+            <App />
+            <StatusBar
+              hidden={false}
+              backgroundColor={secondaryColor}
+              barStyle="dark-content"
+              translucent={true}
+              animated={true}
+            />
+          </AuthProvider>
+        </BleProvider>
+      </NotificationProvider>
     </SafeAreaProvider>
   );
 };

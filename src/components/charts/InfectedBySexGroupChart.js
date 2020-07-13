@@ -35,7 +35,7 @@ const InfectedBySexGroupChart = (props) => {
 
   function bootstrapChart() {
     return (
-      <>
+      <View style={styles.view}>
         <Text
           style={{
             margin: 12,
@@ -110,18 +110,24 @@ const InfectedBySexGroupChart = (props) => {
             <FontAwesome name="female" style={styles.icon} color="#F7A6DD" />
           </View>
         </View>
-      </>
+      </View>
     );
   }
 
   return (
-    <ScrollView
-      contentContainerStyle={styles.view}
-      showsVerticalScrollIndicator={false}
-    >
+    <>
       <AppHeader title={auxRoute} />
-      {state ? bootstrapChart() : <Loading />}
-    </ScrollView>
+      {state ? (
+        <ScrollView
+          contentContainerStyle={{ paddingBottom: 20 }}
+          showsVerticalScrollIndicator={false}
+        >
+          {bootstrapChart()}
+        </ScrollView>
+      ) : (
+        <Loading />
+      )}
+    </>
   );
 };
 
@@ -129,7 +135,7 @@ const styles = StyleSheet.create({
   view: {
     alignItems: "center",
     paddingTop: 5,
-    height: Dimensions.get("window").height,
+    flex: 1,
   },
   generalInfoView: {
     flexDirection: "row",

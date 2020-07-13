@@ -1,6 +1,7 @@
 import React, { useEffect, useContext } from "react";
 import { Context as AuthContext } from "../context/AuthContext";
 import { Context as BleContext } from "../context/BleContext";
+import { Context as NotificationContext } from "../context/NotificationContext";
 import Loading from "../components/Loading";
 
 const LogoutScreen = () => {
@@ -8,12 +9,14 @@ const LogoutScreen = () => {
     state: { notificationToken },
     signout,
   } = useContext(AuthContext);
-  const { clearContext } = useContext(BleContext);
+  const { clearBleContext } = useContext(BleContext);
+  const { clearNotificationContext } = useContext(NotificationContext);
 
   useEffect(() => {
     setTimeout(() => {
       signout({ notificationToken });
-      clearContext();
+      clearBleContext();
+      clearNotificationContext();
     }, 1000);
   }, []);
 
