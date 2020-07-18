@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import AppHeader from "../components/AppHeader";
 import { View, Text, StyleSheet, Dimensions, ScrollView } from "react-native";
-import { primaryColor } from "../utils/Colors";
-import Loading from "../components/Loading";
 import {
   AntDesign,
   MaterialIcons,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import { Card, Button, Icon } from "react-native-elements";
-import useJwt from "../hooks/useJwt";
+import { Card, Button } from "react-native-elements";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import AppHeader from "../components/AppHeader";
+import { primaryColor } from "../utils/Colors";
+import Loading from "../components/Loading";
+import useJwt from "../hooks/useJwt";
 
 const monthNames = [
   "Enero",
@@ -65,13 +65,13 @@ const Home = () => {
           </Text>
         </View>
         <Card
-          title="¿Siente estos sintomas? "
+          title="¿Sientes estos sintomas? "
           containerStyle={[{ borderRadius: 15 }, styles.shadow]}
         >
           <Text style={{ marginBottom: 10, textAlign: "center" }}>
-            Fiebre o escalofríos ,Tos ,Dificultad para respirar, Fatiga ,
-            Dolores musculares,Dolor de cabeza, Pérdida del olfato o el gusto,
-            Dolor de garganta, , moqueo
+            Fiebre o escalofríos, tos, dificultad para respirar, fatiga, dolores
+            musculares, dolor de cabeza, pérdida del olfato o el gusto, dolor de
+            garganta, moqueo
           </Text>
           <TouchableOpacity onPress={() => {}}>
             <Button

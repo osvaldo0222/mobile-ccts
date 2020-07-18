@@ -16,6 +16,7 @@ import {
   Context as AuthContext,
 } from "./src/context/AuthContext";
 import { Provider as BleProvider } from "./src/context/BleContext";
+import { Provider as VisitProvider } from "./src/context/VisitContext";
 import { Provider as NotificationProvider } from "./src/context/NotificationContext";
 import SignInScreen from "./src/screens/SignInScreen";
 import SignUpScreen from "./src/screens/SignUpScreen";
@@ -26,14 +27,8 @@ import { DrawerContent } from "./src/screens/DrawerContent";
 import InfectedChart from "./src/components/charts/InfectedChart";
 import InfectedBySexGroupChart from "./src/components/charts/InfectedBySexGroupChart";
 import NotificationScreen from "./src/screens/NotificationScreen";
-
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-  }),
-});
+import VisitScreen from "./src/screens/VisitScreen";
+import VisitShowScreen from "./src/screens/VisitShowScreen";
 
 const registerForPushNotificationsAsync = async () => {
   let token;
@@ -114,6 +109,27 @@ const StatisticsNavigator = () => {
   );
 };
 
+const VisitNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: true }}>
+      <Stack.Screen
+        name="VisitsList"
+        component={VisitScreen}
+        options={{ header: () => null }}
+      />
+      <Stack.Screen
+        name="Visit"
+        component={VisitShowScreen}
+        options={({ route }) => ({
+          title: `Visita a ${route.params.item.locality.name}`,
+          headerStyle: { backgroundColor: primaryColor },
+          headerTintColor: "#fff",
+        })}
+      />
+    </Stack.Navigator>
+  );
+};
+
 const AppNav = () => {
   return (
     <Drawer.Navigator
@@ -122,6 +138,7 @@ const AppNav = () => {
     >
       <Drawer.Screen name="Home" component={HomeScreen} />
       <Drawer.Screen name="Statistics" component={StatisticsNavigator} />
+      <Drawer.Screen name="Visits" component={VisitNavigator} />
       <Drawer.Screen name="Notifications" component={NotificationScreen} />
       <Drawer.Screen name="Logout" component={LogoutScreen} />
     </Drawer.Navigator>
@@ -133,6 +150,18 @@ const App = () => {
     state: { token, notificationToken, isLoading },
     setNotificationToken,
   } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (!token) {
+      Notifications.setNotificationHandler({
+        handleNotification: async () => ({
+          shouldShowAlert: true,
+          shouldPlaySound: true,
+          shouldSetBadge: true,
+        }),
+      });
+    }
+  }, [token]);
 
   useEffect(() => {
     if (!notificationToken) {
@@ -175,20 +204,22 @@ const App = () => {
 export default () => {
   return (
     <SafeAreaProvider>
-      <NotificationProvider>
-        <BleProvider>
-          <AuthProvider>
-            <App />
-            <StatusBar
-              hidden={false}
-              backgroundColor={secondaryColor}
-              barStyle="dark-content"
-              translucent={true}
-              animated={true}
-            />
-          </AuthProvider>
-        </BleProvider>
-      </NotificationProvider>
+      <VisitProvider>
+        <NotificationProvider>
+          <BleProvider>
+            <AuthProvider>
+              <App />
+              <StatusBar
+                hidden={false}
+                backgroundColor={secondaryColor}
+                barStyle="dark-content"
+                translucent={true}
+                animated={true}
+              />
+            </AuthProvider>
+          </BleProvider>
+        </NotificationProvider>
+      </VisitProvider>
     </SafeAreaProvider>
   );
 };

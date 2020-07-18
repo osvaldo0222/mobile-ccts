@@ -93,7 +93,7 @@ const confirmId = (dispatch) => async ({ id }) => {
 
   try {
     if (id.match(/^[0-9]+$/) && id.length == 11) {
-      await cctsApi.post(`/public/checkPersonalIdentifier/${id}`);
+      await cctsApi.post(`/api/public/checkPersonalIdentifier/${id}`);
       dispatch({ type: "confirm_id" });
     } else {
       dispatch({
@@ -112,7 +112,7 @@ const confirmId = (dispatch) => async ({ id }) => {
 const confirmUsername = (dispatch) => async ({ username }) => {
   try {
     if (username.match(/^[a-zA-Z0-9]*$/) && username.length > 0) {
-      await cctsApi.post(`/public/checkUsername/${username}`);
+      await cctsApi.post(`/api/public/checkUsername/${username}`);
       dispatch({ type: "confirm_username" });
     } else {
       dispatch({
@@ -132,7 +132,7 @@ const confirmUsername = (dispatch) => async ({ username }) => {
 const confirmEmail = (dispatch) => async ({ email }) => {
   try {
     if (email.length > 0) {
-      await cctsApi.post(`/public/checkEmail/${email}`);
+      await cctsApi.post(`/api/public/checkEmail/${email}`);
       dispatch({ type: "confirm_email" });
     } else {
       dispatch({
@@ -198,7 +198,7 @@ const signup = (dispatch) => async ({
   id = id.replace("-", "").replace("-", "");
 
   try {
-    await cctsApi.post("/public/signup", {
+    await cctsApi.post("/api/public/signup", {
       personalIdentifier: id,
       email,
       username,

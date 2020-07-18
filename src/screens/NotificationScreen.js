@@ -3,10 +3,11 @@ import { View, SectionList, TouchableOpacity } from "react-native";
 import { ListItem, Text } from "react-native-elements";
 import { Context as NotificationContext } from "../context/NotificationContext";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import * as Notifications from "expo-notifications";
 import AppHeader from "../components/AppHeader";
-import { secondaryColor, captionColor } from "../utils/Colors";
+import { secondaryColor, captionColor, primaryColor } from "../utils/Colors";
 
-const NotificationScreen = () => {
+const NotificationScreen = ({ navigation }) => {
   const {
     state: { notifications, notificationsLength },
     fetchNotifications,
@@ -14,9 +15,21 @@ const NotificationScreen = () => {
   const [page, setPage] = useState(0);
   const [refreshing, setRefreshing] = useState(true);
 
+  Notifications.setNotificationHandler({
+    handleNotification: async () => {
+      setRefreshing(true);
+
+      return {
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+      };
+    },
+  });
+
   useEffect(() => {
     if (refreshing) {
-      fetchNotifications({ page });
+      fetchNotifications(page);
       setRefreshing(false);
     }
   }, [refreshing]);
@@ -24,7 +37,6 @@ const NotificationScreen = () => {
   return (
     <>
       <AppHeader title="Notificaciones" />
-
       <SectionList
         sections={notifications}
         keyExtractor={(item) => item.id}
@@ -48,14 +60,21 @@ const NotificationScreen = () => {
           </View>
         )}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity
+            onPress={() => {
+              if (item.data.navigate) {
+                navigation.navigate(item.data.navigate);
+              }
+            }}
+          >
             <ListItem
               title={item.title}
+              titleStyle={{ color: primaryColor }}
               subtitle={item.messageBody}
               rightSubtitle={item.sendDate}
               leftAvatar={{ source: require("../../assets/logo.png") }}
               bottomDivider
-              chevron
+              chevron={{ color: primaryColor }}
             />
           </TouchableOpacity>
         )}

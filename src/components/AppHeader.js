@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import { Header } from "react-native-elements";
+import { Header, Badge } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { NavigationContext } from "@react-navigation/native";
 import useBle from "../hooks/useBle";
@@ -38,6 +38,11 @@ const AppHeader = ({ title }) => {
             }
             size={30}
             color={secondaryColor}
+          />
+
+          <Badge
+            status={broadcastState ? "success" : "error"}
+            containerStyle={{ position: "absolute", top: -4, right: -4 }}
           />
         </TouchableOpacity>
       }

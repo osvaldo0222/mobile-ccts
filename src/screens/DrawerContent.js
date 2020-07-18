@@ -44,7 +44,9 @@ export function DrawerContent(props) {
                 <Icon name="crosshairs" color={color} size={size} />
               )}
               label="Visitas"
-              onPress={() => {}}
+              onPress={() => {
+                props.navigation.navigate("Visits");
+              }}
             />
 
             <DrawerItem

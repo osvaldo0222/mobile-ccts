@@ -22,7 +22,7 @@ const notificationReducer = (state, action) => {
   }
 };
 
-const fetchNotifications = (dispatch) => async ({ page = 0 }) => {
+const fetchNotifications = (dispatch) => async (page = 0) => {
   try {
     const response = await cctsApi.get(
       `/api/user/getNotifications?page=${page}`,
@@ -32,8 +32,14 @@ const fetchNotifications = (dispatch) => async ({ page = 0 }) => {
     const sectionNotification = {};
     for (let i = 0; i < notifications.length; i++) {
       let date = new Date(notifications[i].sendDate);
-      let key = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-      let time = `${date.getHours()}:${date.getMinutes()}`;
+      let key = `${date.getFullYear()}-${
+        date.getMonth() < 10 ? `0${date.getMonth()}` : date.getMonth()
+      }-${date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()}`;
+      let time = `${
+        date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()
+      }:${
+        date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes()
+      }`;
       notifications[i].sendDate = time;
       if (sectionNotification[key]) {
         sectionNotification[key] = {
