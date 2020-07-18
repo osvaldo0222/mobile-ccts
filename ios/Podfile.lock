@@ -276,6 +276,8 @@ PODS:
     - React
   - react-native-ble-advertiser (0.0.16):
     - React
+  - react-native-maps (0.27.1):
+    - React
   - react-native-safe-area-context (3.0.2):
     - React
   - React-RCTActionSheet (0.62.2):
@@ -424,6 +426,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-background-actions (from `../node_modules/react-native-background-actions`)
   - react-native-ble-advertiser (from `../node_modules/react-native-ble-advertiser/ios`)
+  - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -534,6 +537,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-background-actions"
   react-native-ble-advertiser:
     :path: "../node_modules/react-native-ble-advertiser/ios"
+  react-native-maps:
+    :path: "../node_modules/react-native-maps"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   React-RCTActionSheet:
@@ -641,6 +646,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 512e560d0e985d0e8c479a54a4e5c147a9c83493
   react-native-background-actions: a1478b432c5d73ce47d32d2b15998f9b60ac8cdc
   react-native-ble-advertiser: 3d210079cf12ae287e8762228f564168636edde7
+  react-native-maps: f4b89da81626ad7f151a8bfcb79733295d31ce5c
   react-native-safe-area-context: b11a34881faac509cad5578726c98161ad4d275c
   React-RCTActionSheet: f41ea8a811aac770e0cc6e0ad6b270c644ea8b7c
   React-RCTAnimation: 49ab98b1c1ff4445148b72a3d61554138565bad0

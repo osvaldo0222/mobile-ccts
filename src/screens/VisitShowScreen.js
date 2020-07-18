@@ -25,7 +25,7 @@ const VisitShowScreen = ({
             latitudeDelta: 0.1,
             longitudeDelta: 0.1,
           }}
-          minZoomLevel={15}
+          minZoomLevel={4}
           loadingEnabled={true}
           loadingIndicatorColor={primaryColor}
           loadingBackgroundColor="#fff"

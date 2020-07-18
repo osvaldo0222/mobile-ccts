@@ -124,6 +124,7 @@ const VisitNavigator = () => {
           title: `Visita a ${route.params.item.locality.name}`,
           headerStyle: { backgroundColor: primaryColor },
           headerTintColor: "#fff",
+          headerBackTitleVisible: false,
         })}
       />
     </Stack.Navigator>
