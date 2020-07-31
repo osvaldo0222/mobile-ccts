@@ -9,6 +9,7 @@ export default () => {
   const [subject, setSubject] = useState("");
   const [name, setName] = useState("");
   const [authorities, setAuthorities] = useState([]);
+  const [loginDate, setLoginDate] = useState(0);
 
   useEffect(() => {
     if (token) {
@@ -17,8 +18,9 @@ export default () => {
       setSubject(body.sub);
       setName(body.name);
       setAuthorities(body.authorities);
+      setLoginDate(new Date(body.iat * 1000));
     }
   }, [token]);
 
-  return [subject, name, authorities];
+  return [subject, name, authorities, loginDate];
 };

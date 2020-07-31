@@ -32,14 +32,21 @@ const fetchNotifications = (dispatch) => async (page = 0) => {
     const sectionNotification = {};
     for (let i = 0; i < notifications.length; i++) {
       let date = new Date(notifications[i].sendDate);
-      let key = `${date.getFullYear()}-${
-        date.getMonth() < 10 ? `0${date.getMonth()}` : date.getMonth()
-      }-${date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()}`;
-      let time = `${
-        date.getHours() < 10 ? `0${date.getHours()}` : date.getHours()
-      }:${
-        date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes()
+
+      let month = date.getUTCMonth() + 1;
+      let day = date.getUTCDate();
+      let year = date.getUTCFullYear();
+      let hours = date.getUTCHours();
+      let minutes = date.getUTCMinutes();
+
+      let key = `${year}-${month < 10 ? `0${month}` : month}-${
+        day < 10 ? `0${day}` : day
       }`;
+
+      let time = `${hours < 10 ? `0${hours}` : hours}:${
+        minutes < 10 ? `0${minutes}` : minutes
+      }`;
+
       notifications[i].sendDate = time;
       if (sectionNotification[key]) {
         sectionNotification[key] = {

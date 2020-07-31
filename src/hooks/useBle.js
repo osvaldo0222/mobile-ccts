@@ -14,7 +14,7 @@ const options = {
   taskTitle: "CCTS",
   taskDesc: "Aplicación CCTS está transmitiendo...",
   taskIcon: {
-    name: "ic_launcher",
+    name: "ic_notification",
     type: "mipmap",
   },
   color: primaryColor,
@@ -84,7 +84,7 @@ export default () => {
   const startBroadcast = async () => {
     await new Promise(() => {
       BLEAdvertiser.broadcast(uuid, [1, 0], {
-        advertiseMode: BLEAdvertiser.ADVERTISE_MODE_LOW_,
+        advertiseMode: BLEAdvertiser.ADVERTISE_MODE_BALANCED,
         txPowerLevel: BLEAdvertiser.ADVERTISE_TX_POWER_HIGH,
         connectable: false,
         includeDeviceName: false,

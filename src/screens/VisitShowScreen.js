@@ -1,5 +1,11 @@
 import React from "react";
-import { ScrollView, FlatList, StyleSheet, YellowBox } from "react-native";
+import {
+  ScrollView,
+  FlatList,
+  StyleSheet,
+  YellowBox,
+  Platform,
+} from "react-native";
 import { Text, Card, Divider } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import MapView, { Marker } from "react-native-maps";
@@ -25,7 +31,7 @@ const VisitShowScreen = ({
             latitudeDelta: 0.1,
             longitudeDelta: 0.1,
           }}
-          minZoomLevel={4}
+          minZoomLevel={Platform.OS === "android" ? 16 : 0}
           loadingEnabled={true}
           loadingIndicatorColor={primaryColor}
           loadingBackgroundColor="#fff"

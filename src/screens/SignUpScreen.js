@@ -103,7 +103,7 @@ const SignUpScreen = () => {
           />
           <Input
             value={email}
-            onChangeText={setEmail}
+            onChangeText={(text) => setEmail(text.trim())}
             label="Correo electrónico"
             autoCapitalize="none"
             autoCorrect={false}

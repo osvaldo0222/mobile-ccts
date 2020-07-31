@@ -40,6 +40,21 @@ const NotificationScreen = ({ navigation }) => {
       <SectionList
         sections={notifications}
         keyExtractor={(item) => item.id}
+        ListEmptyComponent={() => {
+          return (
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: 20,
+              }}
+            >
+              {!refreshing ? (
+                <Text>No tiene ninguna notificación por el momento</Text>
+              ) : null}
+            </View>
+          );
+        }}
         renderSectionHeader={({ section: { title } }) => (
           <View
             style={{
@@ -83,11 +98,12 @@ const NotificationScreen = ({ navigation }) => {
           setRefreshing(true);
           setPage(0);
         }}
-        onEndReachedThreshold
         onEndReached={() => {
           if (notificationsLength >= 25) {
             setRefreshing(true);
             setPage((current) => current + 1);
+          } else {
+            setPage(0);
           }
         }}
       />

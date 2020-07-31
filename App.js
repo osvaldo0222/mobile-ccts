@@ -18,6 +18,7 @@ import {
 import { Provider as BleProvider } from "./src/context/BleContext";
 import { Provider as VisitProvider } from "./src/context/VisitContext";
 import { Provider as NotificationProvider } from "./src/context/NotificationContext";
+import { Provider as HealthStatusProvider } from "./src/context/HealthStatusContext";
 import SignInScreen from "./src/screens/SignInScreen";
 import SignUpScreen from "./src/screens/SignUpScreen";
 import LocalSignInScreen from "./src/screens/LocalSignInScreen";
@@ -29,6 +30,10 @@ import InfectedBySexGroupChart from "./src/components/charts/InfectedBySexGroupC
 import NotificationScreen from "./src/screens/NotificationScreen";
 import VisitScreen from "./src/screens/VisitScreen";
 import VisitShowScreen from "./src/screens/VisitShowScreen";
+import HealthStatusScreen from "./src/screens/HealthStatusScreen";
+import HealthStatusShowScreen from "./src/screens/HealthStatusShowScreen";
+import NewHealthStatusScreen from "./src/screens/NewHealthStatusScreen";
+import ExpositionScreen from "./src/screens/ExpositionScreen";
 
 const registerForPushNotificationsAsync = async () => {
   let token;
@@ -131,6 +136,68 @@ const VisitNavigator = () => {
   );
 };
 
+const HealthReportNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: true }}>
+      <Stack.Screen
+        name="HealthStatusList"
+        component={HealthStatusScreen}
+        options={{ header: () => null }}
+      />
+      <Stack.Screen
+        name="HealthStatusView"
+        component={HealthStatusShowScreen}
+        options={({ route }) => ({
+          title: `Reporte de salud ${route.params.item.id}`,
+          headerStyle: { backgroundColor: primaryColor },
+          headerTintColor: "#fff",
+          headerBackTitleVisible: false,
+        })}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const HealthNavigator = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+          if (route.name === "MyReports") {
+            iconName = "file-chart";
+          } else if (route.name === "NewReport") {
+            iconName = "folder-plus";
+          } else if (route.name === "Exposition") {
+            iconName = "account-group";
+          }
+          return <Icon name={iconName} size={size} color={color} />;
+        },
+      })}
+      tabBarOptions={{
+        activeTintColor: primaryColor,
+        inactiveTintColor: captionColor,
+      }}
+    >
+      <Tab.Screen
+        name="MyReports"
+        component={HealthReportNavigator}
+        options={{ title: "Mis Reportes" }}
+      />
+      <Tab.Screen
+        name="NewReport"
+        component={NewHealthStatusScreen}
+        options={{ title: "Nuevo Reporte" }}
+      />
+      <Tab.Screen
+        name="Exposition"
+        component={ExpositionScreen}
+        options={{ title: "Exposición" }}
+      />
+    </Tab.Navigator>
+  );
+};
+
 const AppNav = () => {
   return (
     <Drawer.Navigator
@@ -141,6 +208,7 @@ const AppNav = () => {
       <Drawer.Screen name="Statistics" component={StatisticsNavigator} />
       <Drawer.Screen name="Visits" component={VisitNavigator} />
       <Drawer.Screen name="Notifications" component={NotificationScreen} />
+      <Drawer.Screen name="HealthStatus" component={HealthNavigator} />
       <Drawer.Screen name="Logout" component={LogoutScreen} />
     </Drawer.Navigator>
   );
@@ -205,22 +273,24 @@ const App = () => {
 export default () => {
   return (
     <SafeAreaProvider>
-      <VisitProvider>
-        <NotificationProvider>
-          <BleProvider>
-            <AuthProvider>
-              <App />
-              <StatusBar
-                hidden={false}
-                backgroundColor={secondaryColor}
-                barStyle="dark-content"
-                translucent={true}
-                animated={true}
-              />
-            </AuthProvider>
-          </BleProvider>
-        </NotificationProvider>
-      </VisitProvider>
+      <HealthStatusProvider>
+        <VisitProvider>
+          <NotificationProvider>
+            <BleProvider>
+              <AuthProvider>
+                <App />
+                <StatusBar
+                  hidden={false}
+                  backgroundColor={secondaryColor}
+                  barStyle="dark-content"
+                  translucent={true}
+                  animated={true}
+                />
+              </AuthProvider>
+            </BleProvider>
+          </NotificationProvider>
+        </VisitProvider>
+      </HealthStatusProvider>
     </SafeAreaProvider>
   );
 };

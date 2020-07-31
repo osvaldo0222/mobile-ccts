@@ -46,9 +46,15 @@ const fetchVisits = (dispatch) => async (page = 0, search = "") => {
 };
 
 const dateAndTimeFormatter = (time) => {
-  return `${time.getDate()}/${time.getMonth()}/${time.getFullYear()} ${
-    time.getHours() < 10 ? `0${time.getHours()}` : time.getHours()
-  }:${time.getMinutes() < 10 ? `0${time.getMinutes()}` : time.getMinutes()}`;
+  return `${time.getUTCDate()}/${
+    time.getUTCMonth() + 1
+  }/${time.getUTCFullYear()} ${
+    time.getUTCHours() < 10 ? `0${time.getUTCHours()}` : time.getUTCHours()
+  }:${
+    time.getUTCMinutes() < 10
+      ? `0${time.getUTCMinutes()}`
+      : time.getUTCMinutes()
+  }`;
 };
 
 const clearVisitContext = (dispatch) => () => {

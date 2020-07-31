@@ -7,7 +7,7 @@ import { primaryColor, borderLineColor, captionColor } from "../utils/Colors";
 import useJwt from "../hooks/useJwt";
 
 export function DrawerContent(props) {
-  const [subject, name, authorities] = useJwt();
+  const [subject, name, authorities, loginDate] = useJwt();
 
   return (
     <View style={{ flex: 1 }}>
@@ -74,7 +74,9 @@ export function DrawerContent(props) {
                 <Icon name="plus" color={color} size={size} />
               )}
               label="Estado de Salud"
-              onPress={() => {}}
+              onPress={() => {
+                props.navigation.navigate("HealthStatus");
+              }}
             />
 
             <DrawerItem
