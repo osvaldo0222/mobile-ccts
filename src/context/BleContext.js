@@ -8,8 +8,15 @@ const bleReducer = (state, action) => {
       return { ...state, started: action.payload };
     case "set_response":
       return { ...state, userResponse: action.payload };
+    case "set_loading":
+      return { ...state, loading: action.payload };
     case "clear":
-      return { broadcastState: false, started: false, userResponse: true };
+      return {
+        broadcastState: false,
+        started: false,
+        userResponse: true,
+        loading: true,
+      };
     default:
       return state;
   }
@@ -27,12 +34,22 @@ const setUserResponse = (dispatch) => ({ response }) => {
   dispatch({ type: "set_response", payload: response });
 };
 
+const setLoading = (dispatch) => ({ loading }) => {
+  dispatch({ type: "set_loading", payload: loading });
+};
+
 const clearBleContext = (dispatch) => () => {
   dispatch({ type: "clear" });
 };
 
 export const { Provider, Context } = createDataContext(
   bleReducer,
-  { setBroadcastState, setStarted, setUserResponse, clearBleContext },
-  { broadcastState: false, started: false, userResponse: true }
+  {
+    setBroadcastState,
+    setStarted,
+    setUserResponse,
+    clearBleContext,
+    setLoading,
+  },
+  { broadcastState: false, started: false, userResponse: true, loading: true }
 );

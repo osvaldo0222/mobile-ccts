@@ -28,10 +28,11 @@ export default () => {
     state: { uuid },
   } = useContext(AuthContext);
   const {
-    state: { broadcastState, started, userResponse },
+    state: { broadcastState, started, userResponse, loading },
     setBroadcastState,
     setStarted,
     setUserResponse,
+    setLoading,
   } = useContext(BleContext);
 
   const getAdapter = async () => {
@@ -47,6 +48,7 @@ export default () => {
   };
 
   const tryToBroadcast = async () => {
+    setLoading({ loading: true });
     const blueoothActive = await getAdapter();
 
     if (!blueoothActive) {
@@ -69,6 +71,7 @@ export default () => {
             text: "No",
             onPress: () => {
               setUserResponse({ response: false });
+              setLoading({ loading: false });
             },
             style: "cancel",
           },
@@ -94,11 +97,13 @@ export default () => {
           console.log(uuid, "Adv Successful", sucess);
           setBroadcastState({ broadcastState: true });
           setStarted({ started: true });
+          setLoading({ loading: false });
         })
         .catch((error) => {
           console.log(uuid, "Adv Error", error);
           setBroadcastState({ broadcastState: false });
           setStarted({ started: false });
+          setLoading({ loading: false });
         });
     });
   };
@@ -134,17 +139,20 @@ export default () => {
     }
   };
 
-  useEffect(() => {
+  const refreshBle = async () => {
     if (!started && userResponse) {
-      stopBroadcast();
+      await stopBroadcast();
 
       if (uuid) {
-        requestLocationPermission();
-
-        tryToBroadcast();
+        await requestLocationPermission();
+        await tryToBroadcast();
       }
     }
+  };
+
+  useEffect(() => {
+    refreshBle();
   }, [uuid]);
 
-  return [broadcastState, tryToBroadcast, stopBroadcast];
+  return [broadcastState, tryToBroadcast, stopBroadcast, loading];
 };

@@ -15,6 +15,7 @@ import {
   Provider as AuthProvider,
   Context as AuthContext,
 } from "./src/context/AuthContext";
+import { Provider as StatisticsProvider } from "./src/context/StatisticsContext";
 import { Provider as BleProvider } from "./src/context/BleContext";
 import { Provider as VisitProvider } from "./src/context/VisitContext";
 import { Provider as NotificationProvider } from "./src/context/NotificationContext";
@@ -25,8 +26,6 @@ import LocalSignInScreen from "./src/screens/LocalSignInScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import LogoutScreen from "./src/screens/LogoutScreen";
 import { DrawerContent } from "./src/screens/DrawerContent";
-import InfectedChart from "./src/components/charts/InfectedChart";
-import InfectedBySexGroupChart from "./src/components/charts/InfectedBySexGroupChart";
 import NotificationScreen from "./src/screens/NotificationScreen";
 import VisitScreen from "./src/screens/VisitScreen";
 import VisitShowScreen from "./src/screens/VisitShowScreen";
@@ -34,6 +33,10 @@ import HealthStatusScreen from "./src/screens/HealthStatusScreen";
 import HealthStatusShowScreen from "./src/screens/HealthStatusShowScreen";
 import NewHealthStatusScreen from "./src/screens/NewHealthStatusScreen";
 import ExpositionScreen from "./src/screens/ExpositionScreen";
+import InfectedScreen from "./src/screens/InfectedScreen";
+import RecoveredScreen from "./src/screens/RecoveredScreen";
+import DeathScreen from "./src/screens/DeathScreen";
+import InfectedRecoveredScreen from "./src/screens/InfectedRecoveredScreen";
 
 const registerForPushNotificationsAsync = async () => {
   let token;
@@ -89,14 +92,14 @@ const StatisticsNavigator = () => {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-          if (route.name === "Infectados") {
+          if (route.name === "Infected") {
             iconName = "ambulance";
-          } else if (route.name === "Recuperados") {
+          } else if (route.name === "Recovered") {
             iconName = "exit-run";
-          } else if (route.name === "Defunciones") {
+          } else if (route.name === "Deaths") {
             iconName = "emoticon-sad";
-          } else if (route.name === "Por Sexo") {
-            iconName = "gender-transgender";
+          } else if (route.name === "Active") {
+            iconName = "axis-arrow";
           }
           return <Icon name={iconName} size={size} color={color} />;
         },
@@ -106,10 +109,26 @@ const StatisticsNavigator = () => {
         inactiveTintColor: captionColor,
       }}
     >
-      <Tab.Screen name="Infectados" component={InfectedChart} />
-      <Tab.Screen name="Recuperados" component={InfectedChart} />
-      <Tab.Screen name="Defunciones" component={InfectedChart} />
-      <Tab.Screen name="Por Sexo" component={InfectedBySexGroupChart} />
+      <Tab.Screen
+        name="Infected"
+        component={InfectedScreen}
+        options={{ title: "Infectados" }}
+      />
+      <Tab.Screen
+        name="Recovered"
+        component={RecoveredScreen}
+        options={{ title: "Recuperados" }}
+      />
+      <Tab.Screen
+        name="Deaths"
+        component={DeathScreen}
+        options={{ title: "Defunciones" }}
+      />
+      <Tab.Screen
+        name="Active"
+        component={InfectedRecoveredScreen}
+        options={{ title: "Activos" }}
+      />
     </Tab.Navigator>
   );
 };
@@ -273,24 +292,26 @@ const App = () => {
 export default () => {
   return (
     <SafeAreaProvider>
-      <HealthStatusProvider>
-        <VisitProvider>
-          <NotificationProvider>
-            <BleProvider>
-              <AuthProvider>
-                <App />
-                <StatusBar
-                  hidden={false}
-                  backgroundColor={secondaryColor}
-                  barStyle="dark-content"
-                  translucent={true}
-                  animated={true}
-                />
-              </AuthProvider>
-            </BleProvider>
-          </NotificationProvider>
-        </VisitProvider>
-      </HealthStatusProvider>
+      <StatisticsProvider>
+        <HealthStatusProvider>
+          <VisitProvider>
+            <NotificationProvider>
+              <BleProvider>
+                <AuthProvider>
+                  <App />
+                  <StatusBar
+                    hidden={false}
+                    backgroundColor={secondaryColor}
+                    barStyle="dark-content"
+                    translucent={true}
+                    animated={true}
+                  />
+                </AuthProvider>
+              </BleProvider>
+            </NotificationProvider>
+          </VisitProvider>
+        </HealthStatusProvider>
+      </StatisticsProvider>
     </SafeAreaProvider>
   );
 };

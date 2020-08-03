@@ -4,6 +4,7 @@ import { Context as BleContext } from "../context/BleContext";
 import { Context as NotificationContext } from "../context/NotificationContext";
 import { Context as VisitContext } from "../context/VisitContext";
 import { Context as HealthStatusContext } from "../context/HealthStatusContext";
+import { Context as StatisticsContext } from "../context/StatisticsContext";
 import Loading from "../components/Loading";
 
 const LogoutScreen = () => {
@@ -15,6 +16,7 @@ const LogoutScreen = () => {
   const { clearNotificationContext } = useContext(NotificationContext);
   const { clearVisitContext } = useContext(VisitContext);
   const { clearHealthStatusContext } = useContext(HealthStatusContext);
+  const { clearStatisticsContext } = useContext(StatisticsContext);
 
   useEffect(() => {
     setTimeout(() => {
@@ -23,6 +25,7 @@ const LogoutScreen = () => {
       clearNotificationContext();
       clearVisitContext();
       clearHealthStatusContext();
+      clearStatisticsContext();
     }, 1000);
   }, []);
 

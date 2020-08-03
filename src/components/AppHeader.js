@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Header, Badge } from "react-native-elements";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { NavigationContext } from "@react-navigation/native";
@@ -17,7 +17,7 @@ const Menu = () => {
 };
 
 const AppHeader = ({ title }) => {
-  const [broadcastState, tryToBroadcast, stopBroadcast] = useBle();
+  const [broadcastState, tryToBroadcast, stopBroadcast, loading] = useBle();
 
   return (
     <Header
@@ -30,20 +30,28 @@ const AppHeader = ({ title }) => {
         <TouchableOpacity
           onPress={broadcastState ? stopBroadcast : tryToBroadcast}
         >
-          <Icon
-            name={
-              broadcastState
-                ? "access-point-network"
-                : "access-point-network-off"
-            }
-            size={30}
-            color={secondaryColor}
-          />
+          {loading ? (
+            <>
+              <ActivityIndicator size="large" color={secondaryColor} />
+            </>
+          ) : (
+            <>
+              <Icon
+                name={
+                  broadcastState
+                    ? "access-point-network"
+                    : "access-point-network-off"
+                }
+                size={30}
+                color={secondaryColor}
+              />
 
-          <Badge
-            status={broadcastState ? "success" : "error"}
-            containerStyle={{ position: "absolute", top: -4, right: -4 }}
-          />
+              <Badge
+                status={broadcastState ? "success" : "error"}
+                containerStyle={{ position: "absolute", top: -4, right: -4 }}
+              />
+            </>
+          )}
         </TouchableOpacity>
       }
       backgroundColor={primaryColor}
