@@ -3,6 +3,7 @@ import { StyleSheet } from "react-native";
 import { Context as StatisticsContext } from "../context/StatisticsContext";
 import ChartComponent from "../components/charts/ChartComponent";
 import AppHeader from "../components/AppHeader";
+import { primaryColor } from "../utils/Colors";
 
 const RecoveredScreen = () => {
   const {
@@ -17,6 +18,7 @@ const RecoveredScreen = () => {
         fetchFunction={fetchRecovered}
         iconName="running"
         subject="Recuperados Recientemente"
+        colorIcon={primaryColor}
       />
     </>
   );

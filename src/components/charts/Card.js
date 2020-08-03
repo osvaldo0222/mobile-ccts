@@ -11,14 +11,22 @@ const CardComponent = ({
   total,
   newest,
   marginBottom,
+  subjectColor,
 }) => {
   return (
     <View style={[styles.card, { marginBottom }]}>
       <View style={styles.cardBody}>
         <Text style={styles.cardText}>{total}</Text>
-        <Text style={styles.subCardText}>
+        <Text
+          style={[
+            styles.subCardText,
+            { color: subjectColor ? subjectColor : "gray" },
+          ]}
+        >
           {subject} {subjectIcon}
-          <Text style={{ color: primaryColor }}>{newest}</Text>
+          <Text style={{ color: subjectColor ? subjectColor : primaryColor }}>
+            {newest}
+          </Text>
         </Text>
       </View>
       <View>

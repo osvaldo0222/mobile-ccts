@@ -17,6 +17,7 @@ const InfectedScreen = () => {
         fetchFunction={fetchInfected}
         iconName="allergies"
         subject="Casos nuevos"
+        colorIcon="#FA9748"
       />
     </>
   );

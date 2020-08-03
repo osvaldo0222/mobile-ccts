@@ -29,7 +29,33 @@ const chartConfig = {
   },
 };
 
-const ChartComponent = ({ values, fetchFunction, subject, iconName }) => {
+//From https://stackoverflow.com/questions/21646738/convert-hex-to-rgba
+function hexToRgbA(hex, opacity) {
+  var c;
+  if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+    c = hex.substring(1).split("");
+    if (c.length == 3) {
+      c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+    }
+    c = "0x" + c.join("");
+    return (
+      "rgba(" +
+      [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(",") +
+      "," +
+      opacity +
+      ")"
+    );
+  }
+  throw new Error("Bad Hex");
+}
+
+const ChartComponent = ({
+  values,
+  fetchFunction,
+  subject,
+  iconName,
+  colorIcon,
+}) => {
   const [loading, setLoading] = useState(true);
   const [days, setDays] = useState(10);
 
@@ -121,7 +147,17 @@ const ChartComponent = ({ values, fetchFunction, subject, iconName }) => {
                 width={Dimensions.get("window").width - 20} // from react-native
                 height={Dimensions.get("window").height / 2}
                 yAxisInterval={2000} // optional, defaults to 1
-                chartConfig={chartConfig}
+                chartConfig={{
+                  ...chartConfig,
+                  color: (opacity = 0.3) => hexToRgbA(colorIcon, opacity),
+                  labelColor: (opacity = 1) =>
+                    `rgba(178, 178, 178, ${opacity})`,
+                  propsForDots: {
+                    r: "4",
+                    strokeWidth: "2",
+                    stroke: colorIcon,
+                  },
+                }}
                 style={styles.chart}
                 withInnerLines={false}
                 bezier={false}
@@ -131,11 +167,12 @@ const ChartComponent = ({ values, fetchFunction, subject, iconName }) => {
               newest={values.newCases}
               total={values.total}
               subject={subject}
+              subjectColor={colorIcon}
+              colorIcon={colorIcon}
               iconName={iconName}
-              colorIcon="#F3AE2B"
               marginBottom={20}
               subjectIcon={
-                <AntDesign name="plus" size={12} color={primaryColor} />
+                <AntDesign name="plus" size={12} color={colorIcon} />
               }
             />
           </View>

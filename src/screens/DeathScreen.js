@@ -17,6 +17,7 @@ const DeathScreen = () => {
         fetchFunction={fetchDeaths}
         iconName="sad-tear"
         subject="Nuevas defunciones"
+        colorIcon="#FC0000"
       />
     </>
   );

@@ -17,9 +17,10 @@ import CardComponent from "../components/charts/Card";
 
 const InfectedRecoveredScreen = () => {
   const {
-    state: { infected, recovered },
+    state: { infected, recovered, deaths },
     fetchInfected,
     fetchRecovered,
+    fetchDeaths,
   } = useContext(StatisticsContext);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
@@ -31,7 +32,10 @@ const InfectedRecoveredScreen = () => {
     if (!recovered.data.length) {
       await fetchRecovered();
     }
-  }, [infected, recovered]);
+    if (!deaths.data.length) {
+      await fetchDeaths();
+    }
+  }, [infected, recovered, deaths]);
 
   useEffect(() => {
     if (loading) {
@@ -46,9 +50,13 @@ const InfectedRecoveredScreen = () => {
         {
           key: 1,
           value: parseFloat(
-            ((1 - recovered.total / infected.total) * 100).toFixed(2)
+            (
+              ((infected.total - recovered.total - deaths.total) /
+                infected.total) *
+              100
+            ).toFixed(2)
           ),
-          svg: { fill: "#FC0000" },
+          svg: { fill: "#FA9748" },
         },
         {
           key: 2,
@@ -57,9 +65,14 @@ const InfectedRecoveredScreen = () => {
           ),
           svg: { fill: primaryColor },
         },
+        {
+          key: 3,
+          value: parseFloat(((deaths.total / infected.total) * 100).toFixed(2)),
+          svg: { fill: "#FC0000" },
+        },
       ]);
     }
-  }, [infected, recovered]);
+  }, [infected, recovered, deaths]);
 
   return (
     <>
@@ -68,7 +81,7 @@ const InfectedRecoveredScreen = () => {
         <Loading />
       ) : (
         <ScrollView
-          contentContainerStyle={{ paddingBottom: 20 }}
+          contentContainerStyle={{ paddingBottom: 50 }}
           showsVerticalScrollIndicator={false}
           refreshControl={
             <RefreshControl
@@ -80,26 +93,17 @@ const InfectedRecoveredScreen = () => {
           }
         >
           <View style={styles.view}>
-            <Text style={styles.title}>Casos Activos Vs. Recuperados</Text>
+            <Text style={styles.title}>Resultado de infectados</Text>
             <View style={styles.chartView}>
               <PieChart style={styles.pieChart} data={data} innerRadius="88%" />
-              <View style={styles.generalInfoView}>
-                <Text style={styles.lengend}>
-                  <Feather name="circle" size={18} color="#FC0000" />
-                  {`  Activos`}
-                </Text>
-                <Text style={styles.lengend}>
-                  <Feather name="circle" size={18} color={primaryColor} />
-                  {`  Recuperados`}
-                </Text>
-              </View>
             </View>
             <CardComponent
-              colorIcon="#FC0000"
+              colorIcon="#FA9748"
               iconName="allergies"
               subject="Casos activos:"
+              subjectColor="#FA9748"
               total={`${data[0].value}%`}
-              newest={` ${infected.total - recovered.total}`}
+              newest={` ${infected.total - recovered.total - deaths.total}`}
               marginBottom={2}
               subjectIcon={null}
             />
@@ -107,8 +111,19 @@ const InfectedRecoveredScreen = () => {
               colorIcon={primaryColor}
               iconName="running"
               subject="Casos recuperados:"
+              subjectColor={primaryColor}
               total={`${data[1].value}%`}
               newest={` ${recovered.total}`}
+              marginBottom={2}
+              subjectIcon={null}
+            />
+            <CardComponent
+              colorIcon="#FC0000"
+              iconName="sad-tear"
+              subject="Casos defunciones:"
+              subjectColor="#FC0000"
+              total={`${data[2].value}%`}
+              newest={` ${deaths.total}`}
               marginBottom={2}
               subjectIcon={null}
             />
