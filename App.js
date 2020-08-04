@@ -20,6 +20,7 @@ import { Provider as BleProvider } from "./src/context/BleContext";
 import { Provider as VisitProvider } from "./src/context/VisitContext";
 import { Provider as NotificationProvider } from "./src/context/NotificationContext";
 import { Provider as HealthStatusProvider } from "./src/context/HealthStatusContext";
+import { Provider as ExpositionProvider } from "./src/context/ExpositionContext";
 import SignInScreen from "./src/screens/SignInScreen";
 import SignUpScreen from "./src/screens/SignUpScreen";
 import LocalSignInScreen from "./src/screens/LocalSignInScreen";
@@ -146,9 +147,12 @@ const VisitNavigator = () => {
         component={VisitShowScreen}
         options={({ route }) => ({
           title: `Visita a ${route.params.item.locality.name}`,
-          headerStyle: { backgroundColor: primaryColor },
+          headerStyle: {
+            backgroundColor: primaryColor,
+          },
           headerTintColor: "#fff",
           headerBackTitleVisible: false,
+          headerTitleAlign: "center",
         })}
       />
     </Stack.Navigator>
@@ -171,6 +175,32 @@ const HealthReportNavigator = () => {
           headerStyle: { backgroundColor: primaryColor },
           headerTintColor: "#fff",
           headerBackTitleVisible: false,
+          headerTitleAlign: "center",
+        })}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const ExpositionNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: true }}>
+      <Stack.Screen
+        name="ExpositionList"
+        component={ExpositionScreen}
+        options={{ header: () => null }}
+      />
+      <Stack.Screen
+        name="VisitExposition"
+        component={VisitShowScreen}
+        options={({ route }) => ({
+          title: `Exposición en ${route.params.item.locality.name}`,
+          headerStyle: {
+            backgroundColor: primaryColor,
+          },
+          headerTintColor: "#fff",
+          headerBackTitleVisible: false,
+          headerTitleAlign: "center",
         })}
       />
     </Stack.Navigator>
@@ -210,7 +240,7 @@ const HealthNavigator = () => {
       />
       <Tab.Screen
         name="Exposition"
-        component={ExpositionScreen}
+        component={ExpositionNavigator}
         options={{ title: "Exposición" }}
       />
     </Tab.Navigator>
@@ -292,26 +322,28 @@ const App = () => {
 export default () => {
   return (
     <SafeAreaProvider>
-      <StatisticsProvider>
-        <HealthStatusProvider>
-          <VisitProvider>
-            <NotificationProvider>
-              <BleProvider>
-                <AuthProvider>
-                  <App />
-                  <StatusBar
-                    hidden={false}
-                    backgroundColor={secondaryColor}
-                    barStyle="dark-content"
-                    translucent={true}
-                    animated={true}
-                  />
-                </AuthProvider>
-              </BleProvider>
-            </NotificationProvider>
-          </VisitProvider>
-        </HealthStatusProvider>
-      </StatisticsProvider>
+      <ExpositionProvider>
+        <StatisticsProvider>
+          <HealthStatusProvider>
+            <VisitProvider>
+              <NotificationProvider>
+                <BleProvider>
+                  <AuthProvider>
+                    <App />
+                    <StatusBar
+                      hidden={false}
+                      backgroundColor={secondaryColor}
+                      barStyle="dark-content"
+                      translucent={true}
+                      animated={true}
+                    />
+                  </AuthProvider>
+                </BleProvider>
+              </NotificationProvider>
+            </VisitProvider>
+          </HealthStatusProvider>
+        </StatisticsProvider>
+      </ExpositionProvider>
     </SafeAreaProvider>
   );
 };

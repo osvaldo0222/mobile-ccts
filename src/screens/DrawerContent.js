@@ -79,13 +79,13 @@ export function DrawerContent(props) {
               }}
             />
 
-            <DrawerItem
+            {/*<DrawerItem
               icon={({ color, size }) => (
                 <Icon name="settings" color={color} size={size} />
               )}
               label="Configuraciones"
               onPress={() => {}}
-            />
+              />*/}
           </View>
         </View>
       </DrawerContentScrollView>

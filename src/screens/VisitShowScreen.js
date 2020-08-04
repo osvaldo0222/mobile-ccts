@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   FlatList,
@@ -6,10 +6,10 @@ import {
   YellowBox,
   Platform,
 } from "react-native";
-import { Text, Card, Divider } from "react-native-elements";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { Card, Divider } from "react-native-elements";
 import MapView, { Marker } from "react-native-maps";
 import { primaryColor } from "../utils/Colors";
+import Line from "../components/Line";
 
 const VisitShowScreen = ({
   route: {
@@ -17,7 +17,10 @@ const VisitShowScreen = ({
   },
 }) => {
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={false}
+    >
       <Card
         containerStyle={styles.card}
         title={item.locality.name}
@@ -43,22 +46,22 @@ const VisitShowScreen = ({
           />
         </MapView>
         <Divider style={[{ marginVertical: 18 }, styles.divider]} />
-        <Text>
-          <Icon name="crosshairs-gps" color={primaryColor} />
-          {`  ${item.locality.address.city}, ${item.locality.address.direction}. ${item.locality.address.country}`}
-        </Text>
-        <Text>
-          <Icon name="rss-box" color={primaryColor} />
-          {`  ${item.locality.nodeCount} Dispositivos Activos`}
-        </Text>
-        <Text>
-          <Icon name="check-all" color={primaryColor} />
-          {`  ${item.locality.confirmCases} Casos Confirmados`}
-        </Text>
-        <Text>
-          <Icon name="check" color={primaryColor} />
-          {`  ${item.locality.suspectsCases} Casos Sospechosos`}
-        </Text>
+        <Line
+          iconName="crosshairs-gps"
+          text={`${item.locality.address.city}, ${item.locality.address.direction}. ${item.locality.address.country}`}
+        />
+        <Line
+          iconName="rss-box"
+          text={`${item.locality.nodeCount} Dispositivos Activos`}
+        />
+        <Line
+          iconName="check-all"
+          text={`${item.locality.confirmCases} Casos Confirmados`}
+        />
+        <Line
+          iconName="check"
+          text={`${item.locality.suspectsCases} Casos Sospechosos`}
+        />
       </Card>
       <Card
         containerStyle={styles.card}
@@ -66,33 +69,31 @@ const VisitShowScreen = ({
         titleStyle={styles.title}
         dividerStyle={styles.divider}
       >
-        <Text>
-          <Icon name="location-enter" color={primaryColor} />
-          {`  Llegada: ${item.timeArrived}`}
-        </Text>
-        <Text>
-          <Icon name="location-exit" color={primaryColor} />
-          {`  Salida: ${item.timeLeft}`}
-        </Text>
-        <Text>
-          <Icon name="percent" color={primaryColor} />
-          {`  Porciento de exposicion: ${item.expositionProbability * 100} %`}
-        </Text>
+        <Line iconName="location-enter" text={`Llegada: ${item.timeArrived}`} />
+        <Line iconName="location-exit" text={`Salida: ${item.timeLeft}`} />
+        <Line
+          iconName="percent"
+          text={`Porciento de exposicion: ${
+            item.expositionProbability * 100
+          } %`}
+        />
         <FlatList
           style={{ marginTop: 10 }}
           keyExtractor={(item) => item.id.toString()}
           data={item.nodes}
           renderItem={({ item }) => (
-            <Text>
-              <Icon name="circle-small" color={primaryColor} />
-              {`  ${item.description}`}
-            </Text>
+            <Line
+              iconName="circle-small"
+              text={`${item.description}`}
+              iconSize={23}
+            />
           )}
           ListHeaderComponent={() => (
-            <Text style={{ fontWeight: "bold" }}>
-              <Icon name="devices" color={primaryColor} />
-              {`  Dispositivos registrados:`}
-            </Text>
+            <Line
+              iconName="devices"
+              text={`Dispositivos registrados:`}
+              textStyle={{ fontWeight: "bold" }}
+            />
           )}
         />
       </Card>

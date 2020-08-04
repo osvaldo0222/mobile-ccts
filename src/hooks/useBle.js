@@ -131,7 +131,7 @@ export default () => {
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
           console.log("You can use the location");
         } else {
-          console.log("location permission denied");
+          console.log("Location permission denied");
         }
       }
     } catch (err) {

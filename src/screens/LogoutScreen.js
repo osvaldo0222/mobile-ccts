@@ -5,6 +5,7 @@ import { Context as NotificationContext } from "../context/NotificationContext";
 import { Context as VisitContext } from "../context/VisitContext";
 import { Context as HealthStatusContext } from "../context/HealthStatusContext";
 import { Context as StatisticsContext } from "../context/StatisticsContext";
+import { Context as ExpositionContext } from "../context/ExpositionContext";
 import Loading from "../components/Loading";
 
 const LogoutScreen = () => {
@@ -17,6 +18,7 @@ const LogoutScreen = () => {
   const { clearVisitContext } = useContext(VisitContext);
   const { clearHealthStatusContext } = useContext(HealthStatusContext);
   const { clearStatisticsContext } = useContext(StatisticsContext);
+  const { clearExpositionContext } = useContext(ExpositionContext);
 
   useEffect(() => {
     setTimeout(() => {
@@ -26,6 +28,7 @@ const LogoutScreen = () => {
       clearVisitContext();
       clearHealthStatusContext();
       clearStatisticsContext();
+      clearExpositionContext();
     }, 1000);
   }, []);
 

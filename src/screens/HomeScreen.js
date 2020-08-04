@@ -19,7 +19,8 @@ import AppHeader from "../components/AppHeader";
 import Loading from "../components/Loading";
 import useJwt from "../hooks/useJwt";
 import { Context as NotificationContext } from "../context/NotificationContext";
-import { primaryColor, secondaryColor } from "../utils/Colors";
+import { Context as ExpositionContext } from "../context/ExpositionContext";
+import { primaryColor } from "../utils/Colors";
 
 const monthNames = [
   "Enero",
@@ -41,6 +42,10 @@ const Home = ({ navigation }) => {
     state: { notifications },
     fetchNotifications,
   } = useContext(NotificationContext);
+  const {
+    state: { status },
+    fetchStatus,
+  } = useContext(ExpositionContext);
   const [refreshing, setRefreshing] = useState(true);
   const [notificationsBagde, setNotificationsBagde] = useState(0);
   const [state, setState] = useState(false);
@@ -74,6 +79,7 @@ const Home = ({ navigation }) => {
       }`;
 
       notificationRefresh();
+      fetchStatus();
       setDate(dateToCopy);
       setTime(time);
       setState(true);
@@ -159,7 +165,7 @@ const Home = ({ navigation }) => {
                       color: "black",
                     }}
                   >
-                    Riesgo Bajo
+                    Riesgo {status.comment}
                   </Text>
                   <TouchableOpacity
                     onPress={() => {
@@ -183,7 +189,32 @@ const Home = ({ navigation }) => {
                     color="#FC0000"
                     style={styles.cardIco}
                   />
-                  <Text>Sin exposición hasta ahora</Text>
+                  <Text>
+                    Se ha detectado{" "}
+                    {status.percentage < 33.33
+                      ? "baja"
+                      : status.percentage < 66.66
+                      ? "media"
+                      : "alta"}{" "}
+                    exposición
+                  </Text>
+                </View>
+                <View style={[styles.flexAndCenter, styles.info]}>
+                  <MaterialCommunityIcons
+                    name="account-group"
+                    size={24}
+                    color={
+                      status.percentage < 33.33
+                        ? "#87C76B"
+                        : status.percentage < 66.66
+                        ? primaryColor
+                        : "#FC0000"
+                    }
+                    style={styles.cardIco}
+                  />
+                  <Text>
+                    Porciento de exposición {status.percentage.toFixed(2)}%
+                  </Text>
                 </View>
                 <View style={[styles.flexAndCenter, styles.info]}>
                   <AntDesign

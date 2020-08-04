@@ -1,8 +1,8 @@
 import React from "react";
 import { ScrollView, StyleSheet, YellowBox, FlatList } from "react-native";
-import { Text, Card } from "react-native-elements";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { Card } from "react-native-elements";
 import { primaryColor } from "../utils/Colors";
+import Line from "../components/Line";
 
 const HealthStatusShowScreen = ({
   route: {
@@ -10,49 +10,58 @@ const HealthStatusShowScreen = ({
   },
 }) => {
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={false}
+    >
       <Card
         containerStyle={styles.card}
         title={"Reporte de salud"}
         titleStyle={styles.title}
         dividerStyle={styles.divider}
       >
-        <Text>
-          <Icon name="calendar-range" color={primaryColor} />
-          {`  ${item.statusDate}`}
-        </Text>
-        <Text>
-          <Icon name="biohazard" color={primaryColor} />
-          {`  ${item.status ? "Positivo" : "Negativo"} al virus`}
-        </Text>
-        <Text style={{ fontWeight: "bold", marginTop: 10 }}>
-          <Icon name="braille" color={primaryColor} />
-          {`  Sintomas presentados:`}
-        </Text>
-        <Text>
-          <Icon name="circle-small" color={primaryColor} />
-          {`  Fiebre: ${item.fever ? "Si" : "No"}`}
-        </Text>
-        <Text>
-          <Icon name="circle-small" color={primaryColor} />
-          {`  Tos: ${item.cough ? "Si" : "No"}`}
-        </Text>
-        <Text>
-          <Icon name="circle-small" color={primaryColor} />
-          {`  Dificultad respiratoria: ${item.breathDifficulty ? "Si" : "No"}`}
-        </Text>
-        <Text>
-          <Icon name="circle-small" color={primaryColor} />
-          {`  Dolor de garganta: ${item.soreThroat ? "Si" : "No"}`}
-        </Text>
-        <Text>
-          <Icon name="circle-small" color={primaryColor} />
-          {`  Pérdida del olfato: ${item.smellLoss ? "Si" : "No"}`}
-        </Text>
-        <Text>
-          <Icon name="circle-small" color={primaryColor} />
-          {`  Pérdida de sabor: ${item.tasteLoss ? "Si" : "No"}`}
-        </Text>
+        <Line iconName="calendar-range" text={item.statusDate} />
+        <Line
+          iconName="biohazard"
+          text={`${item.status ? "Positivo" : "Negativo"} al virus`}
+        />
+        <Line
+          iconName="braille"
+          text={`Sintomas presentados:`}
+          textStyle={{ fontWeight: "bold" }}
+        />
+        <Line
+          iconName="circle-small"
+          text={`Fiebre: ${item.fever ? "Si" : "No"}`}
+          iconSize={25}
+        />
+        <Line
+          iconName="circle-small"
+          text={`Tos: ${item.cough ? "Si" : "No"}`}
+          iconSize={25}
+        />
+        <Line
+          iconName="circle-small"
+          text={`Dificultad respiratoria: ${
+            item.breathDifficulty ? "Si" : "No"
+          }`}
+          iconSize={25}
+        />
+        <Line
+          iconName="circle-small"
+          text={`Dolor de garganta: ${item.soreThroat ? "Si" : "No"}`}
+          iconSize={23}
+        />
+        <Line
+          iconName="circle-small"
+          text={`Pérdida del olfato: ${item.smellLoss ? "Si" : "No"}`}
+          iconSize={25}
+        />
+        <Line
+          iconName="circle-small"
+          text={`Pérdida de sabor: ${item.tasteLoss ? "Si" : "No"}`}
+          iconSize={25}
+        />
       </Card>
       <Card
         containerStyle={styles.card}
@@ -65,10 +74,7 @@ const HealthStatusShowScreen = ({
           keyExtractor={(item) => item}
           data={item.recommendations}
           renderItem={({ item }) => (
-            <Text>
-              <Icon name="circle-small" color={primaryColor} />
-              {`  ${item}`}
-            </Text>
+            <Line iconName="circle-small" text={`${item}`} iconSize={25} />
           )}
         />
       </Card>

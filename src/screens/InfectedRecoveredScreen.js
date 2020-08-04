@@ -7,7 +7,6 @@ import {
   ScrollView,
   RefreshControl,
 } from "react-native";
-import { Feather } from "@expo/vector-icons";
 import { PieChart } from "react-native-svg-charts";
 import Loading from "../components/Loading";
 import AppHeader from "../components/AppHeader";
@@ -21,6 +20,7 @@ const InfectedRecoveredScreen = () => {
     fetchInfected,
     fetchRecovered,
     fetchDeaths,
+    clearStatisticsContext,
   } = useContext(StatisticsContext);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
@@ -87,6 +87,7 @@ const InfectedRecoveredScreen = () => {
             <RefreshControl
               refreshing={loading}
               onRefresh={() => {
+                clearStatisticsContext();
                 setLoading(true);
               }}
             />
