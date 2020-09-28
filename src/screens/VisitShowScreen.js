@@ -73,9 +73,8 @@ const VisitShowScreen = ({
         <Line iconName="location-exit" text={`Salida: ${item.timeLeft}`} />
         <Line
           iconName="percent"
-          text={`Porciento de exposicion: ${
-            item.expositionProbability * 100
-          } %`}
+          text={`Porciento de exposicion: ${item.expositionProbability * 100
+            } %`}
         />
         <FlatList
           style={{ marginTop: 10 }}

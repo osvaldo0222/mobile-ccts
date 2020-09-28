@@ -78,7 +78,13 @@ const NotificationScreen = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => {
               if (item.data.navigate) {
-                navigation.navigate(item.data.navigate);
+                if (item.data.screen) {
+                  navigation.navigate(item.data.navigate, {
+                    screen: item.data.screen,
+                  });
+                } else {
+                  navigation.navigate(item.data.navigate);
+                }
               }
             }}
           >

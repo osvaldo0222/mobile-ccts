@@ -69,14 +69,12 @@ const Home = ({ navigation }) => {
   useEffect(() => {
     if (refreshing) {
       let auxDate = new Date();
-      let dateToCopy = `${
-        monthNames[auxDate.getMonth()]
-      }, ${auxDate.getDate()}`;
+      let dateToCopy = `${monthNames[auxDate.getMonth()]
+        }, ${auxDate.getDate()}`;
       let hours = auxDate.getHours();
       let minutes = auxDate.getMinutes();
-      let time = `${hours < 10 ? `0${hours}` : hours}:${
-        minutes < 10 ? `0${minutes}` : minutes
-      }`;
+      let time = `${hours < 10 ? `0${hours}` : hours}:${minutes < 10 ? `0${minutes}` : minutes
+        }`;
 
       notificationRefresh();
       fetchStatus();
@@ -194,8 +192,8 @@ const Home = ({ navigation }) => {
                     {status.percentage < 33.33
                       ? "baja"
                       : status.percentage < 66.66
-                      ? "media"
-                      : "alta"}{" "}
+                        ? "media"
+                        : "alta"}{" "}
                     exposición
                   </Text>
                 </View>
@@ -207,13 +205,24 @@ const Home = ({ navigation }) => {
                       status.percentage < 33.33
                         ? "#87C76B"
                         : status.percentage < 66.66
-                        ? primaryColor
-                        : "#FC0000"
+                          ? primaryColor
+                          : "#FC0000"
                     }
                     style={styles.cardIco}
                   />
                   <Text>
-                    Porciento de exposición {status.percentage.toFixed(2)}%
+                    Porciento de exposición: {status.percentage.toFixed(2)}%
+                  </Text>
+                </View>
+                <View style={[styles.flexAndCenter, styles.info]}>
+                  <MaterialCommunityIcons
+                    name="account-switch"
+                    size={24}
+                    color="#FA9748"
+                    style={styles.cardIco}
+                  />
+                  <Text>
+                    Contacto con contagiados: {status.contacts}
                   </Text>
                 </View>
                 <View style={[styles.flexAndCenter, styles.info]}>
@@ -281,8 +290,8 @@ const Home = ({ navigation }) => {
           </View>
         </>
       ) : (
-        <Loading />
-      )}
+          <Loading />
+        )}
     </>
   );
 };
@@ -356,7 +365,8 @@ const styles = StyleSheet.create({
   riskCard: {
     marginTop: 15,
     width: Dimensions.get("window").width - 30,
-    height: Dimensions.get("window").height / 2.7,
+    //height: Dimensions.get("window").height / 2.7,
+    paddingBottom: 50,
     backgroundColor: "#FFFFFF",
     alignSelf: "center",
     borderRadius: 15,

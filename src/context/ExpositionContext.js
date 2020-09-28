@@ -22,6 +22,7 @@ const expositionReducer = (state, action) => {
         status: {
           percentage: 0,
           comment: "",
+          contacts: 0
         },
       };
     case "clear_exposition":
@@ -85,15 +86,12 @@ const fetchStatus = (dispatch) => async () => {
 };
 
 const dateAndTimeFormatter = (time) => {
-  return `${time.getUTCDate()}/${
-    time.getUTCMonth() + 1
-  }/${time.getUTCFullYear()} ${
-    time.getUTCHours() < 10 ? `0${time.getUTCHours()}` : time.getUTCHours()
-  }:${
-    time.getUTCMinutes() < 10
+  return `${time.getUTCDate()}/${time.getUTCMonth() + 1
+    }/${time.getUTCFullYear()} ${time.getUTCHours() < 10 ? `0${time.getUTCHours()}` : time.getUTCHours()
+    }:${time.getUTCMinutes() < 10
       ? `0${time.getUTCMinutes()}`
       : time.getUTCMinutes()
-  }`;
+    }`;
 };
 
 const clearExpositionContext = (dispatch) => async () => {
@@ -109,6 +107,7 @@ export const { Provider, Context } = createDataContext(
     status: {
       percentage: 0,
       comment: "bajo",
+      contacts: 0
     },
   }
 );
