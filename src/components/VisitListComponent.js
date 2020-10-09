@@ -34,8 +34,8 @@ const VisitListComponent = ({ item }) => {
             item.expositionProbability > 0.6
               ? "error"
               : item.expositionProbability > 0.3
-              ? "warning"
-              : "success",
+                ? "warning"
+                : "success",
         }}
       />
     </TouchableOpacity>

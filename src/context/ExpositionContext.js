@@ -49,13 +49,15 @@ const fetchExposition = (dispatch) => async (page = 0) => {
     let expositionOriginal = response.data.result;
 
     for (let i = 0; i < expositionOriginal.length; i++) {
-      let timeArrived = new Date(expositionOriginal[i].visit.timeArrived);
-      let timeLeft = new Date(expositionOriginal[i].visit.timeLeft);
+      for (let j = 0; j < expositionOriginal[i].visit.length; j++) {
+        let timeArrived = new Date(expositionOriginal[i].visit[j].timeArrived);
+        let timeLeft = new Date(expositionOriginal[i].visit[j].timeLeft);
+        expositionOriginal[i].visit[j].timeArrived = dateAndTimeFormatter(
+          timeArrived
+        );
+        expositionOriginal[i].visit[j].timeLeft = dateAndTimeFormatter(timeLeft);
+      }
       let timeExposition = new Date(expositionOriginal[i].date);
-      expositionOriginal[i].visit.timeArrived = dateAndTimeFormatter(
-        timeArrived
-      );
-      expositionOriginal[i].visit.timeLeft = dateAndTimeFormatter(timeLeft);
       expositionOriginal[i].date = dateAndTimeFormatter(timeExposition);
     }
 

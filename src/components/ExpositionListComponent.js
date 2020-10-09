@@ -11,28 +11,33 @@ const ExpositionListComponent = ({ item }) => {
     <TouchableOpacity
       onPress={() => {
         navigation.navigate("VisitExposition", {
-          item: item.visit,
+          item: item,
         });
       }}
     >
       <ListItem
-        title={item.visit.locality.name}
+        title={item.locality.name}
         titleStyle={styles.title}
         subtitle={
           <>
-            <Text>{item.date}</Text>
-            <Text>{item.comment}</Text>
-            <Text>{`${item.visit.locality.address.city}, ${item.visit.locality.address.country}`}</Text>
+            <Text>Llegada: {item.timeArrived}</Text>
+            <Text>Salida: {item.timeLeft}</Text>
+            <Text>{`${item.locality.address.city}, ${item.locality.address.country}`}</Text>
           </>
         }
         leftAvatar={{
-          source: require("../../assets/logo.png"),
+          source: require("../../assets/home.png"),
           rounded: false,
         }}
         bottomDivider
         chevron={{ color: primaryColor }}
         badge={{
-          status: item.exposition ? "error" : "success",
+          status:
+            item.expositionProbability > 0.6
+              ? "error"
+              : item.expositionProbability > 0.3
+                ? "warning"
+                : "success",
         }}
       />
     </TouchableOpacity>
