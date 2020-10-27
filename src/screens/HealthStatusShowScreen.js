@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, StyleSheet, YellowBox, FlatList } from "react-native";
+import { ScrollView, StyleSheet, YellowBox, FlatList, LogBox } from "react-native";
 import { Card } from "react-native-elements";
 import { primaryColor } from "../utils/Colors";
 import Line from "../components/Line";
@@ -42,9 +42,8 @@ const HealthStatusShowScreen = ({
         />
         <Line
           iconName="circle-small"
-          text={`Dificultad respiratoria: ${
-            item.breathDifficulty ? "Si" : "No"
-          }`}
+          text={`Dificultad respiratoria: ${item.breathDifficulty ? "Si" : "No"
+            }`}
           iconSize={25}
         />
         <Line
@@ -81,10 +80,12 @@ const HealthStatusShowScreen = ({
     </ScrollView>
   );
 };
-
+/*
 YellowBox.ignoreWarnings([
   "VirtualizedLists should never be nested", // TODO: Remove when fixed
-]);
+]);*/
+
+LogBox.ignoreAllLogs(true);
 
 const styles = StyleSheet.create({
   container: {

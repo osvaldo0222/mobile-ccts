@@ -5,6 +5,7 @@ import {
   StyleSheet,
   YellowBox,
   Platform,
+  LogBox,
 } from "react-native";
 import { Card, Divider } from "react-native-elements";
 import MapView, { Marker } from "react-native-maps";
@@ -100,9 +101,11 @@ const VisitShowScreen = ({
   );
 };
 
-YellowBox.ignoreWarnings([
+/*YellowBox.ignoreWarnings([
   "VirtualizedLists should never be nested", // TODO: Remove when fixed
-]);
+]);*/
+
+LogBox.ignoreAllLogs(true);
 
 const styles = StyleSheet.create({
   container: {
