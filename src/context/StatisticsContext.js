@@ -45,7 +45,7 @@ const subtractStatistics = (result) => {
 
   total = data[data.length - 1];
   newCases = data[data.length - 1] - data[data.length - 2];
-
+  
   return { dates, labels, data, total, newCases };
 };
 

@@ -25,12 +25,12 @@ const SignInScreen = ({ navigation }) => {
       </View>
       <View style={styles.body}>
         <AuthForm />
-        <Button
+        {/*<Button
           containerStyle={styles.forgetPassword}
           titleStyle={styles.button}
           title="¿Olvidaste tus credenciales? Restablecer"
           type="clear"
-        />
+        />*/}
       </View>
       <View style={styles.footer}>
         <Button

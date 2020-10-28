@@ -55,14 +55,14 @@ const VisitShowScreen = ({
           iconName="rss-box"
           text={`${item.locality.nodeCount} Dispositivos Activos`}
         />
-        <Line
+       { /*<Line
           iconName="check-all"
           text={`${item.locality.confirmCases} Casos Confirmados`}
         />
         <Line
           iconName="check"
           text={`${item.locality.suspectsCases} Casos Sospechosos`}
-        />
+       />*/}
       </Card>
       <Card
         containerStyle={styles.card}
@@ -72,11 +72,11 @@ const VisitShowScreen = ({
       >
         <Line iconName="location-enter" text={`Llegada: ${item.timeArrived}`} />
         <Line iconName="location-exit" text={`Salida: ${item.timeLeft}`} />
-        <Line
+        {/*<Line
           iconName="percent"
           text={`Porciento de exposicion: ${item.expositionProbability * 100
             } %`}
-        />
+          />*/}
         <FlatList
           style={{ marginTop: 10 }}
           keyExtractor={(item) => item.id.toString()}
