@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from "react";
-import { Platform, PermissionsAndroid, Alert } from "react-native";
+import React, { useCallback, useContext, useEffect } from "react";
+import { Platform, PermissionsAndroid, Alert, NativeEventEmitter, NativeModules } from "react-native";
 import BLEAdvertiser from "react-native-ble-advertiser";
 import BackgroundJob from "react-native-background-actions";
 import { Context as AuthContext } from "../context/AuthContext";
@@ -33,6 +33,7 @@ export default () => {
     setStarted,
     setUserResponse,
     setLoading,
+    setIntervalFunc
   } = useContext(BleContext);
 
   const getAdapter = async () => {
@@ -93,7 +94,7 @@ export default () => {
         includeDeviceName: false,
         includeTxPowerLevel: false,
       })
-        .then((sucess) => {
+        .then(async (sucess) => {
           console.log(uuid, "Adv Successful", sucess);
           setBroadcastState({ broadcastState: true });
           setStarted({ started: true });
@@ -113,8 +114,9 @@ export default () => {
     BLEAdvertiser.stopBroadcast()
       .then((sucess) => console.log(uuid, "Stop Broadcast Successful", sucess))
       .catch((error) => console.log(uuid, "Stop Broadcast Error", error));
-    setBroadcastState({ broadcastState: false });
     setStarted({ started: false });
+    setLoading({ loading: false });
+    setBroadcastState({ broadcastState: false });
   };
 
   const requestLocationPermission = async () => {
@@ -153,6 +155,13 @@ export default () => {
   useEffect(() => {
     refreshBle();
   }, [uuid]);
+
+  /*const event = useCallback( async (enabled) => {
+    console.log("Bluetooth status: ", enabled.enabled);
+    if (enabled.enabled === false) {
+      await stopBroadcast();
+    }
+  }, []);*/
 
   return [broadcastState, tryToBroadcast, stopBroadcast, loading];
 };

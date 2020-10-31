@@ -20,12 +20,11 @@ const statisticsReducer = (state, action) => {
   }
 };
 
-const subtractStatistics = (result) => {
+const subtractStatistics = (result, newCases) => {
   let dates = [];
   let labels = [];
   let data = [];
   let total = 0;
-  let newCases = 0;
   let count = 0;
 
   result.reverse().forEach((element) => {
@@ -44,7 +43,9 @@ const subtractStatistics = (result) => {
   });
 
   total = data[data.length - 1];
-  newCases = data[data.length - 1] - data[data.length - 2];
+  if (newCases === 0) {
+    newCases = data[data.length - 1] - data[data.length - 2];
+  }
   
   return { dates, labels, data, total, newCases };
 };
@@ -55,9 +56,13 @@ const fetchInfected = (dispatch) => async (days = 10) => {
       `/api/statistics/infected/${days}`,
       null
     );
+    const dashboard = await cctsApi.get(
+      `/api/statistics/dashboard`,
+      null
+    );
     dispatch({
       type: "fetch_infected",
-      payload: subtractStatistics(response.data.result),
+      payload: subtractStatistics(response.data.result, dashboard.data.result.cases.new.replace("+", "")),
     });
   } catch (error) {
     //ERROR REQUEST
@@ -70,9 +75,13 @@ const fetchRecovered = (dispatch) => async (days = 10) => {
       `/api/statistics/recovered/${days}`,
       null
     );
+    const dashboard = await cctsApi.get(
+      `/api/statistics/dashboard`,
+      null
+    );
     dispatch({
       type: "fetch_recovered",
-      payload: subtractStatistics(response.data.result),
+      payload: subtractStatistics(response.data.result, 0),
     });
   } catch (error) {
     //ERROR REQUEST
@@ -82,9 +91,13 @@ const fetchRecovered = (dispatch) => async (days = 10) => {
 const fetchDeaths = (dispatch) => async (days = 10) => {
   try {
     const response = await cctsApi.get(`/api/statistics/death/${days}`, null);
+    const dashboard = await cctsApi.get(
+      `/api/statistics/dashboard`,
+      null
+    );
     dispatch({
       type: "fetch_death",
-      payload: subtractStatistics(response.data.result),
+      payload: subtractStatistics(response.data.result, dashboard.data.result.deaths.new.replace("+", "")),
     });
   } catch (error) {
     //ERROR REQUEST
